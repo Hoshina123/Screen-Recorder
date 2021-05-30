@@ -1,0 +1,24 @@
+QWidget#recorder{
+    background: #ececec;
+    border-style: outset;
+    border-radius: 15px;
+    border-color: #0088ff;
+    border-width: 2px;
+}
+
+QLCDNumber#recordTime{
+    background: transparent;
+    color: #0088ff;
+}
+QToolButton#pauseButton{
+    background: rgba(128,128,128,0);
+    border: none;
+    border-radius: 5px;
+    border-image: url("./buttons/pause.svg");
+}
+QToolButton#pauseButton:hover{
+    background: rgba(128,128,128,0.4);
+}
+QToolButton#pauseButton:pressed{
+    background: rgba(128,128,128,0.6);
+}

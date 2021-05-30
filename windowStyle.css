@@ -1,0 +1,59 @@
+QLabel{
+    background: transparent;
+    font-family: 'Consolas','Microsoft YaHei UI';
+}
+
+/*title bar*/
+QWidget#titleBar{
+    background: #0088ff;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+QLabel#windowTitle{
+    font-size: 40px;
+    color: #000000;
+}
+QToolButton#showmin{
+    background: #13f013;
+    border-radius: 10px;
+}
+QToolButton#showmin:hover{
+    background: #17d817;
+}
+QToolButton#showmax{
+    background: #f0f008;
+    border-radius: 10px;
+}
+QToolButton#showmax:hover{
+    background: #e4e40f;
+}
+QToolButton#closeWindow{
+    background: #ff0f0f;
+    border-radius: 10px;
+}
+QToolButton#closeWindow:hover{
+    background: #ee0e0e;
+}
+
+/*contents*/
+QWidget#content{
+    background: #eeeeee;
+    border-style: outset;
+    border-color: #0088ff;
+    border-width: 2px;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+QPushButton#recordButton{
+    background: transparent;
+    border: none;
+    border-radius: 249px;
+    border-image: url(./buttons/record.png);
+}
+QPushButton#recordButton:hover{
+    background: #dfdfdf;
+}
+QPushButton#recordButton:pressed{
+    background: #c9c9c9;
+}
