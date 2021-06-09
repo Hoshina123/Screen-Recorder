@@ -10,15 +10,15 @@ QLCDNumber#recordTime{
     background: transparent;
     color: #0088ff;
 }
-QToolButton#pauseButton{
+
+QPushButton#stopButton{
     background: rgba(128,128,128,0);
-    border: none;
     border-radius: 5px;
-    border-image: url("./buttons/pause.svg");
+    border-image: url(./buttons/stop.svg);
 }
-QToolButton#pauseButton:hover{
-    background: rgba(128,128,128,0.4);
+QPushButton#stopButton:hover{
+    background: rgba(128,128,128,0.2);
 }
-QToolButton#pauseButton:pressed{
-    background: rgba(128,128,128,0.6);
+QPushButton#stopButton:pressed{
+    background: rgba(128,128,128,0.5);
 }

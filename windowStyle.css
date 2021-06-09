@@ -57,3 +57,13 @@ QPushButton#recordButton:hover{
 QPushButton#recordButton:pressed{
     background: #c9c9c9;
 }
+
+QWidget#recordAreaSet{
+    background: transparent;
+    font-family: Consolas,'Microsoft YaHei UI';
+}
+QLabel#recordAreaLabel{
+    background: transparent;
+    font-size: 50px;
+    color: #000000;
+}

@@ -1,9 +1,12 @@
+import sys
+import threading
+import time
 from PyQt5 import *
 from PyQt5.Qt import *
-from PyQt5.QtGui import *
 from PyQt5.QtCore import *
+from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-import sys
+import recorder
 
 class Window(QMainWindow):
     #initialize window
@@ -92,10 +95,42 @@ class Window(QMainWindow):
         content.setLayout(windowLayout)
 
         # record button
+        def loadRecorder():
+            self.hide()
+            record = recorder.Recorder()
+            record.showWindow()
+            def recordListener():
+                while True:
+                    if record.recordMode == 0:
+                        self.show()
+                        break
+            recThread = threading.Thread(target=record.recordScreen,name="Recorder")
+            recThread.start()
+            listenThread = threading.Thread(target=recordListener,name="Record-Listener")
+            listenThread.start()
         recordbtn = QPushButton(content)
         recordbtn.setObjectName("recordButton")
         recordbtn.setFixedSize(500,500)
+        recordbtn.clicked.connect(loadRecorder)
         windowLayout.addWidget(recordbtn,0,0)
+
+        # record area set
+        recArea = QWidget()
+        recArea.setObjectName("recordAreaSet")
+        recArea.setFixedSize(650,500)
+        windowLayout.addWidget(recArea,0,1)
+        # widget layout
+        areaLayout = QHBoxLayout(recArea)
+        areaLayout.setAlignment(Qt.AlignLeft|Qt.AlignTop)
+        # label
+        areaLabel = QLabel(text="Record area")
+        areaLabel.setObjectName("recordAreaLabel")
+        areaLabel.setFixedSize(300,50)
+        areaLayout.addWidget(areaLabel)
+        # area select
+        fullScreen = QRadioButton(text="Full screen")
+        fullScreen.setObjectName("recordFullScreen")
+        fullScreen.setFixedSize(300,50)
 
         self.show()
 
