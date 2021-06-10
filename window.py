@@ -117,20 +117,32 @@ class Window(QMainWindow):
         # record area set
         recArea = QWidget()
         recArea.setObjectName("recordAreaSet")
-        recArea.setFixedSize(650,500)
+        recArea.setFixedSize(350,500)
         windowLayout.addWidget(recArea,0,1)
         # widget layout
-        areaLayout = QHBoxLayout(recArea)
-        areaLayout.setAlignment(Qt.AlignLeft|Qt.AlignTop)
+        areaLayout = QVBoxLayout(recArea)
+        areaLayout.setAlignment(Qt.AlignHCenter|Qt.AlignTop)
+        areaLayout.setSpacing(30)
         # label
         areaLabel = QLabel(text="Record area")
         areaLabel.setObjectName("recordAreaLabel")
         areaLabel.setFixedSize(300,50)
         areaLayout.addWidget(areaLabel)
         # area select
+        # full screen #
         fullScreen = QRadioButton(text="Full screen")
         fullScreen.setObjectName("recordFullScreen")
+        fullScreen.setChecked(True)
         fullScreen.setFixedSize(300,50)
+        areaLayout.addWidget(fullScreen)
+        # custom area #
+        tickScreen = QRadioButton(text="Custom area")
+        tickScreen.setObjectName("recordCustomArea")
+        tickScreen.setFixedSize(300,50)
+        areaLayout.addWidget(tickScreen)
+        cusLayout = QGridLayout()
+        cusLayout.setAlignMent(Qt.AlignLeft|Qt.AlignTop)
+        areaLayout.addLayout(cusLayout)
 
         self.show()
 

@@ -67,3 +67,75 @@ QLabel#recordAreaLabel{
     font-size: 50px;
     color: #000000;
 }
+QRadioButton#recordFullScreen{
+    background: transparent;
+    font-size: 40px;
+    color: #000000;
+    font-family: Consolas,'Microsoft YaHei UI';
+}
+QRadioButton#recordFullScreen:indicator:unchecked{
+    background: transparent;
+    border-radius: 5px;
+    border: 2px solid #000000;
+}
+QRadioButton#recordFullScreen:indicator:unchecked:hover{
+    background: #b9deff;
+    border-radius: 5px;
+    border: 2px solid #000000;
+}
+QRadioButton#recordFullScreen:indicator:unchecked:pressed{
+    background: #007eec;
+    border-radius: 5px;
+    border: 2px solid #000000;
+}
+QRadioButton#recordFullScreen:indicator:checked{
+    background: #0088ff;
+    border-radius: 5px;
+    border: 2px solid #000000;
+}
+QRadioButton#recordFullScreen:indicator:checked:hover{
+    background: #007eec;
+    border-radius: 5px;
+    border: 2px solid #000000;
+}
+QRadioButton#recordFullScreen:indicator:checked:pressed{
+    background: #0079e4;
+    border-radius: 5px;
+    border: 2px solid #000000;
+}
+QRadioButton#recordCustomArea{
+    background: transparent;
+    font-size: 40px;
+    color: #000000;
+    font-family: Consolas,'Microsoft YaHei UI';
+}
+QRadioButton#recordCustomArea:indicator:unchecked{
+    background: transparent;
+    border-radius: 5px;
+    border: 2px solid #000000;
+}
+QRadioButton#recordCustomArea:indicator:unchecked:hover{
+    background: #b9deff;
+    border-radius: 5px;
+    border: 2px solid #000000;
+}
+QRadioButton#recordCustomArea:indicator:unchecked:pressed{
+    background: #007eec;
+    border-radius: 5px;
+    border: 2px solid #000000;
+}
+QRadioButton#recordCustomArea:indicator:checked{
+    background: #0088ff;
+    border-radius: 5px;
+    border: 2px solid #000000;
+}
+QRadioButton#recordCustomArea:indicator:checked:hover{
+    background: #007eec;
+    border-radius: 5px;
+    border: 2px solid #000000;
+}
+QRadioButton#recordCustomArea:indicator:checked:pressed{
+    background: #0079e4;
+    border-radius: 5px;
+    border: 2px solid #000000;
+}
