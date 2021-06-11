@@ -139,3 +139,36 @@ QRadioButton#recordCustomArea:indicator:checked:pressed{
     border-radius: 5px;
     border: 2px solid #000000;
 }
+QLabel#areaPosition{
+    background: transparent;
+    font-family: Consolas,'Microsoft YaHei UI';
+    font-size: 40px;
+}
+QLineEdit#areaXPosition{
+    background: transparent;
+    border-radius: 10px;
+    border: 2px solid #0088ff;
+    font-family: Consolas,'Microsoft YaHei UI';
+    font-size: 35px;
+}
+QLineEdit#areaYPosition{
+    background: transparent;
+    border-radius: 10px;
+    border: 2px solid #0088ff;
+    font-family: Consolas,'Microsoft YaHei UI';
+    font-size: 35px;
+}
+QLineEdit#areaWidth{
+    background: transparent;
+    border-radius: 10px;
+    border: 2px solid #0088ff;
+    font-family: Consolas,'Microsoft YaHei UI';
+    font-size: 35px;
+}
+QLineEdit#areaHeight{
+    background: transparent;
+    border-radius: 10px;
+    border: 2px solid #0088ff;
+    font-family: Consolas,'Microsoft YaHei UI';
+    font-size: 35px;
+}
