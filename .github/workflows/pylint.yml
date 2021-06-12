@@ -22,6 +22,7 @@ jobs:
         pip install pillow
         pip install sounddevice
         pip install moviepy
+        pip install pyaudio
     - name: Analysing the code with pylint
       run: |
         pylint `ls -R|grep .py$|xargs`
