@@ -12,8 +12,17 @@ class Window(QMainWindow):
     #initialize window
     def __init__(self):
         super().__init__()
-        self.showWindow()
         self.m_flag = False
+        self.desktop = QApplication.desktop()
+        w = self.desktop.width()
+        h = self.desktop.height()
+        #set window
+        self.setFixedSize(int(w*0.6),int(h*0.7))
+        self.setWindowTitle("Screen recorder")
+        self.setWindowFlags(Qt.FramelessWindowHint)
+        self.setAttribute(Qt.WA_TranslucentBackground)
+        self.setWindowOpacity(0.8)
+        self.showWindow()
     
     #rewrite window events
     def mousePressEvent(self,event):
@@ -32,13 +41,6 @@ class Window(QMainWindow):
 
     #show window
     def showWindow(self):
-        #set window
-        self.setFixedSize(2000,1400)
-        self.setWindowTitle("Screen recorder")
-        self.setWindowFlags(Qt.FramelessWindowHint)
-        self.setAttribute(Qt.WA_TranslucentBackground)
-        self.setWindowOpacity(0.8)
-
         #read style sheet
         style = open("windowStyle.css","r",encoding="UTF-8")
         self.setStyleSheet(style.read())
@@ -47,22 +49,22 @@ class Window(QMainWindow):
         #title bar
         titleBar = QWidget(self)
         titleBar.setObjectName("titleBar")
-        titleBar.setFixedSize(2000,80)
+        titleBar.setFixedSize(self.width(),int(self.height()*0.06))
 
         #main widget
         content = QWidget(self)
         content.setObjectName("content")
-        content.setFixedSize(2000,1320)
-        content.move(0,80)
+        content.setFixedSize(self.width(),int(self.height()*0.94))
+        content.move(0,titleBar.height())
 
         # title
         title = QLabel(text="Screen Recorder")
         title.setObjectName("windowTitle")
-        title.setFixedSize(350,50)
+        title.setFixedSize(int(self.width()*0.18),int(self.height()*0.036))
         # buttons
         minbtn = QToolButton()
         minbtn.setObjectName("showmin")
-        minbtn.setFixedSize(40,40)
+        minbtn.setFixedSize(int(self.width()*0.02),int(self.width()*0.02))
         minbtn.clicked.connect(self.showMinimized)
         def toggleMax():
             if self.isMaximized():
@@ -73,11 +75,11 @@ class Window(QMainWindow):
             content.setFixedSize(self.width(),self.height()-80)
         maxbtn = QToolButton()
         maxbtn.setObjectName("showmax")
-        maxbtn.setFixedSize(40,40)
+        maxbtn.setFixedSize(int(self.width()*0.02),int(self.width()*0.02))
         maxbtn.clicked.connect(toggleMax)
         closebtn = QToolButton()
         closebtn.setObjectName("closeWindow")
-        closebtn.setFixedSize(40,40)
+        closebtn.setFixedSize(int(self.width()*0.02),int(self.width()*0.02))
         closebtn.clicked.connect(self.close)
         
         # title bar layout
@@ -110,66 +112,69 @@ class Window(QMainWindow):
             listenThread.start()
         recordbtn = QPushButton(content)
         recordbtn.setObjectName("recordButton")
-        recordbtn.setFixedSize(500,500)
+        recordbtn.setFixedSize(int(self.width()*0.25),int(self.width()*0.25))
         recordbtn.clicked.connect(loadRecorder)
         windowLayout.addWidget(recordbtn,0,0)
 
         # record area set
         recArea = QWidget()
         recArea.setObjectName("recordAreaSet")
-        recArea.setFixedSize(350,500)
+        recArea.setFixedSize(int(self.width()*0.18),int(self.height()*0.357))
         windowLayout.addWidget(recArea,0,1)
         # widget layout
         areaLayout = QVBoxLayout(recArea)
         areaLayout.setAlignment(Qt.AlignHCenter|Qt.AlignTop)
-        areaLayout.setSpacing(30)
+        areaLayout.setSpacing(int(self.width()*0.015))
         # label
         areaLabel = QLabel(text="Record area")
         areaLabel.setObjectName("recordAreaLabel")
-        areaLabel.setFixedSize(300,50)
+        areaLabel.setFixedSize(int(self.width()*0.26),int(self.height()*0.036))
         areaLayout.addWidget(areaLabel)
         # area select
         # full screen #
         fullScreen = QRadioButton(text="Full screen")
         fullScreen.setObjectName("recordFullScreen")
         fullScreen.setChecked(True)
-        fullScreen.setFixedSize(300,50)
+        fullScreen.setFixedSize(int(self.width()*0.16),int(self.height()*0.036))
         areaLayout.addWidget(fullScreen)
         # custom area #
         cusLayout = QGridLayout()
-        cusLayout.setSpacing(10)
+        cusLayout.setSpacing(int(self.width()*0.005))
         cusLayout.setAlignment(Qt.AlignLeft|Qt.AlignTop)
         tickScreen = QRadioButton(text="Custom area")
         tickScreen.setObjectName("recordCustomArea")
-        tickScreen.setFixedSize(350,50)
+        tickScreen.setFixedSize(int(self.width()*0.16),int(self.height()*0.036))
         cusLayout.addWidget(tickScreen,0,0)
 
         # position #
         areaPos = QLabel(text="Position:")
         areaPos.setObjectName("areaPosition")
-        areaPos.setFixedSize(300,50)
+        areaPos.setFixedSize(int(self.width()*0.15),int(self.height()*0.036))
         cusLayout.addWidget(areaPos,1,0)
         areaX = QLineEdit()
         areaX.setObjectName("areaXPosition")
-        areaX.setFixedSize(130,55)
+        areaX.setFixedSize(int(self.width()*0.07),int(self.height()*0.04))
         areaX.setAlignment(Qt.AlignCenter)
         areaX.setPlaceholderText("X")
-        areaX.setValidator()
+        areaX.setValidator(QIntValidator())
         areaY = QLineEdit()
         areaY.setObjectName("areaYPosition")
-        areaY.setFixedSize(130,55)
+        areaY.setFixedSize(int(self.width()*0.07),int(self.height()*0.04))
         areaY.setAlignment(Qt.AlignCenter)
         areaY.setPlaceholderText("Y")
+        areaY.setValidator(QIntValidator())
         areaWidth = QLineEdit()
         areaWidth.setObjectName("areaWidth")
-        areaWidth.setFixedSize(130,55)
+        areaWidth.setFixedSize(int(self.width()*0.07),int(self.height()*0.04))
         areaWidth.setAlignment(Qt.AlignCenter)
         areaWidth.setPlaceholderText("Width")
+        areaWidth.setValidator(QIntValidator())
         areaHeight = QLineEdit()
         areaHeight.setObjectName("areaHeight")
-        areaHeight.setFixedSize(130,55)
+        areaHeight.setFixedSize(int(self.width()*0.07),int(self.height()*0.04))
         areaHeight.setAlignment(Qt.AlignCenter)
         areaHeight.setPlaceholderText("Height")
+        areaHeight.setValidator(QIntValidator())
         cusLayout.addWidget(areaX,2,0)
         cusLayout.addWidget(areaY,2,1)
         cusLayout.addWidget(areaWidth,3,0)
