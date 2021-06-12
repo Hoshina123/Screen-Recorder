@@ -1,11 +1,5 @@
 import sys
 import threading
-import time
-from PyQt5 import *
-from PyQt5.Qt import *
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
 import recorder
 
 class Window(QMainWindow):
