@@ -26,7 +26,6 @@ jobs:
         pip install flake8 pytest
         pip install pyqt5
         pip install pyqt5-tools
-        pip install pyaudio
         pip install pillow
         pip install sounddevice
         pip install moviepy
