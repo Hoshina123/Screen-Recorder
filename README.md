@@ -3,6 +3,7 @@
 
 # window
 You can press the 'RECORD' button to record your screen.
+Change the area that the recorder records on the right of the 'RECORD' button. You can see the preview on the right
 *The window is still making , we'll finish it in 1 month or longer (<4 months).*
 
 # recorder
