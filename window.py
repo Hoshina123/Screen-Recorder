@@ -1,5 +1,13 @@
 import sys
+import os
 import threading
+import time
+from PIL import ImageGrab
+from PyQt5 import *
+from PyQt5.Qt import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
 import recorder
 
 class Window(QMainWindow):
@@ -8,15 +16,16 @@ class Window(QMainWindow):
         super().__init__()
         self.m_flag = False
         self.desktop = QApplication.desktop()
-        w = self.desktop.width()
-        h = self.desktop.height()
+        self.w = self.desktop.width()
+        self.h = self.desktop.height()
         #set window
-        self.setFixedSize(int(w*0.6),int(h*0.7))
+        self.setFixedSize(int(self.w*0.6),int(self.h*0.7))
         self.setWindowTitle("Screen recorder")
         self.setWindowFlags(Qt.FramelessWindowHint)
         self.setAttribute(Qt.WA_TranslucentBackground)
         self.setWindowOpacity(0.8)
         self.showWindow()
+        self.recArea = (0,0,self.w,self.h)
     
     #rewrite window events
     def mousePressEvent(self,event):
@@ -32,6 +41,9 @@ class Window(QMainWindow):
     def mouseReleaseEvent(self,QMouseEvent):
         self.m_flag=False
         self.setCursor(QCursor(Qt.ArrowCursor))
+    def closeEvent(self,event):
+        os.remove("buttons/desktop.png")
+        event.accept()
 
     #show window
     def showWindow(self):
@@ -60,6 +72,8 @@ class Window(QMainWindow):
         minbtn.setObjectName("showmin")
         minbtn.setFixedSize(int(self.width()*0.02),int(self.width()*0.02))
         minbtn.clicked.connect(self.showMinimized)
+        minbtn.setToolTip("Show minimized (Alt+N)")
+        minbtn.setShortcut("Alt+N")
         def toggleMax():
             if self.isMaximized():
                 self.showNormal()
@@ -71,10 +85,14 @@ class Window(QMainWindow):
         maxbtn.setObjectName("showmax")
         maxbtn.setFixedSize(int(self.width()*0.02),int(self.width()*0.02))
         maxbtn.clicked.connect(toggleMax)
+        maxbtn.setToolTip("Show maximized (Alt+X)")
+        maxbtn.setShortcut("Alt+X")
         closebtn = QToolButton()
         closebtn.setObjectName("closeWindow")
         closebtn.setFixedSize(int(self.width()*0.02),int(self.width()*0.02))
         closebtn.clicked.connect(self.close)
+        closebtn.setToolTip("Close (Alt+F4)")
+        closebtn.setShortcut("Alt+F4")
         
         # title bar layout
         titleLayout = QHBoxLayout()
@@ -93,7 +111,7 @@ class Window(QMainWindow):
         # record button
         def loadRecorder():
             self.hide()
-            record = recorder.Recorder()
+            record = recorder.Recorder(area=self.recArea)
             record.showWindow()
             def recordListener():
                 while True:
@@ -174,6 +192,56 @@ class Window(QMainWindow):
         cusLayout.addWidget(areaWidth,3,0)
         cusLayout.addWidget(areaHeight,3,1)
         areaLayout.addLayout(cusLayout)
+
+        # area preview
+        previewImage = ImageGrab.grab()
+        previewImage.save("./buttons/desktop.png")
+        previewWidget = QWidget()
+        previewWidget.setObjectName("recordPreviewImage")
+        previewWidget.setFixedSize(int(self.w*0.25),int(self.h*0.25))
+        windowLayout.addWidget(previewWidget,0,2)
+        previewArea = QWidget(previewWidget)
+        previewArea.setObjectName("recordAreaPreview")
+        previewArea.setFixedSize(int(self.w*0.25),int(self.h*0.25))
+        previewArea.move(0,0)
+
+        def checkArea():
+            try:
+                x = int(areaX.text())
+                y = int(areaY.text())
+                w = int(areaWidth.text())
+                h = int(areaHeight.text())
+            except:
+                areaX.setText("0")
+                areaY.setText("0")
+                areaWidth.setText(str(self.w))
+                areaHeight.setText(str(self.h))
+                x = 0
+                y = 0
+                w = self.w
+                h = self.h
+            if tickScreen.isChecked():
+                maxWidth = self.w-x
+                maxHeight = self.h-y
+                if w > maxWidth:
+                    w = maxWidth
+                    areaWidth.setText(str(w))
+                if h > maxHeight:
+                    h = maxHeight
+                    areaHeight.setText(str(h))
+                previewArea.setFixedSize(int(w*0.25),int(h*0.25))
+                previewArea.move(int(x*0.25),int(y*0.25))
+                self.recArea = (x,y,w,h)
+            else:
+                previewArea.setFixedSize(int(self.w*0.25),int(self.h*0.25))
+                previewArea.move(0,0)
+                self.recArea = (0,0,self.w,self.h)
+        areaX.textChanged.connect(checkArea)
+        areaY.textChanged.connect(checkArea)
+        areaWidth.textChanged.connect(checkArea)
+        areaHeight.textChanged.connect(checkArea)
+        fullScreen.toggled.connect(checkArea)
+        tickScreen.toggled.connect(checkArea)
 
         self.show()
 

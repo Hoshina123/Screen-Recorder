@@ -15,7 +15,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 class Recorder(QWidget):
-    def __init__(self):
+    def __init__(self,area):
         super().__init__()
         self.recordMode = 1
         self.desktop = QApplication.desktop()
@@ -26,6 +26,7 @@ class Recorder(QWidget):
         self.videoName = ""
         self.audioName = ""
         self.outputName = ""
+        self.area = area
 
     #rewrite window events
     def mousePressEvent(self,event):
@@ -55,7 +56,8 @@ class Recorder(QWidget):
         currentTime = time.localtime()
         self.outputName = "videos/{}.mp4".format(time.strftime("%Y%m%d-%H%M%S"))
         self.videoName = "videos/{}.avi".format(time.strftime("%Y%m%d-%H%M%S"))
-        video = cv2.VideoWriter(self.videoName,fourcc,cv2.CAP_PROP_FPS,(w,h))
+        video = cv2.VideoWriter(self.videoName,fourcc,cv2.CAP_PROP_FPS,
+        (self.area[2]-self.area[0],self.area[3]-self.area[1]))
         time.sleep(self.wait)
         # record
         while True:
@@ -63,7 +65,7 @@ class Recorder(QWidget):
                 break
             elif self.recordMode == 2:
                 continue
-            currentImg = ImageGrab.grab()
+            currentImg = ImageGrab.grab(bbox=self.area)
             writeImg = cv2.cvtColor(np.array(currentImg),cv2.COLOR_RGB2BGR)
             video.write(writeImg)
         video.release()

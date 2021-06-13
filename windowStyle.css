@@ -172,3 +172,11 @@ QLineEdit#areaHeight{
     font-family: Consolas,'Microsoft YaHei UI';
     font-size: 35px;
 }
+QWidget#recordPreviewImage{
+    background: transparent;
+    border-image: url(./buttons/desktop.png);
+}
+QWidget#recordAreaPreview{
+    background: rgba(235,235,235,0.6);
+    border: 2px solid #0088ff;
+}
