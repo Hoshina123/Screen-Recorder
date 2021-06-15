@@ -48,7 +48,7 @@ QWidget#content{
 QPushButton#recordButton{
     background: transparent;
     border: none;
-    border-radius: 249px;
+    border-radius: 15px;
     border-image: url(./buttons/record.png);
 }
 QPushButton#recordButton:hover{
@@ -179,4 +179,34 @@ QWidget#recordPreviewImage{
 QWidget#recordAreaPreview{
     background: rgba(235,235,235,0.6);
     border: 2px solid #0088ff;
+}
+
+QTabWidget#videosAndSettings{
+    background: transparent;
+    font-family: Consolas,'Microsoft YaHei UI';
+    border: none;
+}
+QTabWidget#videosAndSettings:pane{
+    background: transparent;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    border: 1px solid #0088ff;
+}
+QTabWidget#videosAndSettings:tab-bar{
+    background: transparent;
+    border: none;
+}
+QTabBar:tab{
+    background: #2d9dff;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    font-size: 35px;
+    width: 170%;
+    min-height: 60%;
+}
+QTabBar:tab:hover{
+    background: #44a8ff;
+}
+QTabBar:tab:selected{
+    background: #0088ff;
 }

@@ -135,7 +135,7 @@ class Window(QMainWindow):
         windowLayout.addWidget(recArea,0,1)
         # widget layout
         areaLayout = QVBoxLayout(recArea)
-        areaLayout.setAlignment(Qt.AlignHCenter|Qt.AlignTop)
+        areaLayout.setAlignment(Qt.AlignLeft|Qt.AlignTop)
         areaLayout.setSpacing(int(self.width()*0.015))
         # label
         areaLabel = QLabel(text="Record area")
@@ -242,6 +242,13 @@ class Window(QMainWindow):
         areaHeight.textChanged.connect(checkArea)
         fullScreen.toggled.connect(checkArea)
         tickScreen.toggled.connect(checkArea)
+
+        config = QTabWidget()
+        config.setObjectName("videosAndSettings")
+        config.setFixedSize(int(self.width()*0.98),int(self.height()*0.54))
+        config.addTab(QWidget(),"1")
+        config.addTab(QWidget(),"2")
+        windowLayout.addWidget(config,2,0)
 
         self.show()
 
