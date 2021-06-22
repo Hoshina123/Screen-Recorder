@@ -23,7 +23,7 @@ class Window(QMainWindow):
         self.setWindowTitle("Screen recorder")
         self.setWindowFlags(Qt.FramelessWindowHint)
         self.setAttribute(Qt.WA_TranslucentBackground)
-        self.setWindowOpacity(0.8)
+        self.setWindowOpacity(0.9)
         self.showWindow()
         self.recArea = (0,0,self.w,self.h)
     
