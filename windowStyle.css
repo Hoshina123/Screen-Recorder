@@ -210,3 +210,43 @@ QTabBar:tab:hover{
 QTabBar:tab:selected{
     background: #0088ff;
 }
+
+QTableWidget#videoList{
+    background: transparent;
+    color: #000000;
+    font-family: Consolas,'Microsoft YaHei UI';
+    border: 1px solid #0088ff;
+    border-radius: 15px;
+}
+QHeaderView#videoListHHeader{
+    background: transparent;
+}
+QHeaderView#videoListHHeader::section{
+    background: rgba(255,255,255,0.6);
+    color: #000000;
+    border: none;
+}
+QHeaderView#videoListHHeader::section:first{
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+QHeaderView#videoListHHeader::section:last{
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+QHeaderView#videoListVHeader{
+    background: transparent;
+}
+QHeaderView#videoListVHeader::section{
+    background: rgba(255,255,255,0.6);
+    color: #000000;
+    border: none;
+}
+QHeaderView#videoListVHeader::section:first{
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+QHeaderView#videoListVHeader::section:last{
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}

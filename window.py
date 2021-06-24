@@ -243,12 +243,15 @@ class Window(QMainWindow):
         fullScreen.toggled.connect(checkArea)
         tickScreen.toggled.connect(checkArea)
 
-        config = QTabWidget()
-        config.setObjectName("videosAndSettings")
-        config.setFixedSize(int(self.width()*0.98),int(self.height()*0.54))
-        config.addTab(QWidget(),"1")
-        config.addTab(QWidget(),"2")
-        windowLayout.addWidget(config,2,0)
+        videoList = QTableWidget(0,5)
+        videoList.setObjectName("videoList")
+        videoList.setFixedSize(int(self.width()*0.98),int(self.height()*0.55))
+        videoList.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        videoList.horizontalHeader().setObjectName("videoListHHeader")
+        videoList.verticalHeader().setObjectName("videoListVHeader")
+        videoList.setHorizontalHeaderLabels(["Name","Time","Size","Duration","State"])
+        videoList.setSelectionBehavior(QAbstractItemView.SelectRows)
+        windowLayout.addWidget(videoList,1,0)
 
         self.show()
 
