@@ -1,0 +1,16 @@
+﻿QLabel{
+	background: transaprent;
+}
+
+QWidget#icon{
+	background: transparent;
+	border-image: url(./required/icon.png);
+}
+QLabel#title{
+	font-family: Consolas,'Microsoft YaHei UI';
+	font-size: 80px;
+}
+QLabel#text{
+	font-family: Consolas,'Microsoft YaHei UI';
+	font-size: 35px;
+}

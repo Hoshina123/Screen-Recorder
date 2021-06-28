@@ -49,7 +49,7 @@ QPushButton#recordButton{
     background: transparent;
     border: none;
     border-radius: 15px;
-    border-image: url(./buttons/record.png);
+    border-image: url(./required/buttons/record.png);
 }
 QPushButton#recordButton:hover{
     background: #dfdfdf;
@@ -174,7 +174,7 @@ QLineEdit#areaHeight{
 }
 QWidget#recordPreviewImage{
     background: transparent;
-    border-image: url(./buttons/desktop.png);
+    border-image: url(./required/buttons/desktop.png);
 }
 QWidget#recordAreaPreview{
     background: rgba(235,235,235,0.6);
