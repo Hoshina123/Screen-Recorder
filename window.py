@@ -21,10 +21,10 @@ class Window(QMainWindow):
         #set window
         self.setFixedSize(int(self.w*0.6),int(self.h*0.7))
         self.setWindowTitle("Screen recorder")
+        self.setWindowIcon(QIcon("./required/icon.png"))
         self.setWindowFlags(Qt.FramelessWindowHint)
         self.setAttribute(Qt.WA_TranslucentBackground)
         self.setWindowOpacity(0.9)
-        self.showWindow()
         self.recArea = (0,0,self.w,self.h)
     
     #rewrite window events
@@ -42,7 +42,7 @@ class Window(QMainWindow):
         self.m_flag=False
         self.setCursor(QCursor(Qt.ArrowCursor))
     def closeEvent(self,event):
-        os.remove("buttons/desktop.png")
+        os.remove("required/buttons/desktop.png")
         event.accept()
 
     #show window
@@ -63,6 +63,10 @@ class Window(QMainWindow):
         content.setFixedSize(self.width(),int(self.height()*0.94))
         content.move(0,titleBar.height())
 
+        # icon
+        icon = QWidget()
+        icon.setObjectName("windowIcon")
+        icon.setFixedSize(int(self.width()*0.03),int(self.width()*0.03))
         # title
         title = QLabel(text="Screen Recorder")
         title.setObjectName("windowTitle")
@@ -96,6 +100,7 @@ class Window(QMainWindow):
         
         # title bar layout
         titleLayout = QHBoxLayout()
+        titleLayout.addWidget(icon,alignment=Qt.AlignLeft)
         titleLayout.addWidget(title,alignment=Qt.AlignLeft)
         titleLayout.addStretch(0.5)
         titleLayout.addWidget(minbtn,alignment=Qt.AlignRight)
@@ -195,7 +200,7 @@ class Window(QMainWindow):
 
         # area preview
         previewImage = ImageGrab.grab()
-        previewImage.save("./buttons/desktop.png")
+        previewImage.save("./required/buttons/desktop.png")
         previewWidget = QWidget()
         previewWidget.setObjectName("recordPreviewImage")
         previewWidget.setFixedSize(int(self.w*0.25),int(self.h*0.25))
@@ -254,8 +259,3 @@ class Window(QMainWindow):
         windowLayout.addWidget(videoList,1,0)
 
         self.show()
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    win = Window()
-    sys.exit(app.exec_())

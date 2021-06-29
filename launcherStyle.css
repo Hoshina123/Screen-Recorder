@@ -10,6 +10,18 @@ QLabel#title{
 	font-family: Consolas,'Microsoft YaHei UI';
 	font-size: 80px;
 }
+QLabel#version{
+	font-family: Consolas,'Microsoft YaHei UI';
+	font-size: 50px;
+}
+QLable#state{
+	background: transparent;
+	font-family: Consolas,'Microsoft YaHei UI';
+	font-size: 40px;
+	border-radius: 10px;
+	border-color: #2097ff;
+	border-width: 2px;
+}
 QLabel#text{
 	font-family: Consolas,'Microsoft YaHei UI';
 	font-size: 35px;

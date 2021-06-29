@@ -9,6 +9,10 @@ QWidget#titleBar{
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
 }
+QWidget#windowIcon{
+    background: transparent;
+    border-image: url(./required/icon.png);
+}
 QLabel#windowTitle{
     font-size: 40px;
     color: #000000;
