@@ -109,7 +109,7 @@ class Window(QMainWindow):
         titleBar.setLayout(titleLayout)
 
         # window contents
-        windowLayout = QGridLayout()
+        windowLayout = QVBoxLayout()
         windowLayout.setAlignment(Qt.AlignTop | Qt.AlignLeft)
         content.setLayout(windowLayout)
 
@@ -127,17 +127,21 @@ class Window(QMainWindow):
             recThread.start()
             listenThread = threading.Thread(target=recordListener,name="Record-Listener")
             listenThread.start()
+        topLayout = QHBoxLayout()
+        topLayout.setAlignment(Qt.AlignLeft)
+        topLayout.setSpacing(100)
+        windowLayout.addLayout(topLayout)
         recordbtn = QPushButton(content)
         recordbtn.setObjectName("recordButton")
         recordbtn.setFixedSize(int(self.width()*0.25),int(self.width()*0.25))
         recordbtn.clicked.connect(loadRecorder)
-        windowLayout.addWidget(recordbtn,0,0)
+        topLayout.addWidget(recordbtn)
 
         # record area set
         recArea = QWidget()
         recArea.setObjectName("recordAreaSet")
         recArea.setFixedSize(int(self.width()*0.18),int(self.height()*0.357))
-        windowLayout.addWidget(recArea,0,1)
+        topLayout.addWidget(recArea)
         # widget layout
         areaLayout = QVBoxLayout(recArea)
         areaLayout.setAlignment(Qt.AlignLeft|Qt.AlignTop)
@@ -204,7 +208,7 @@ class Window(QMainWindow):
         previewWidget = QWidget()
         previewWidget.setObjectName("recordPreviewImage")
         previewWidget.setFixedSize(int(self.w*0.25),int(self.h*0.25))
-        windowLayout.addWidget(previewWidget,0,2)
+        topLayout.addWidget(previewWidget)
         previewArea = QWidget(previewWidget)
         previewArea.setObjectName("recordAreaPreview")
         previewArea.setFixedSize(int(self.w*0.25),int(self.h*0.25))
@@ -256,6 +260,6 @@ class Window(QMainWindow):
         videoList.verticalHeader().setObjectName("videoListVHeader")
         videoList.setHorizontalHeaderLabels(["Name","Time","Size","Duration","State"])
         videoList.setSelectionBehavior(QAbstractItemView.SelectRows)
-        windowLayout.addWidget(videoList,1,0)
+        windowLayout.addWidget(videoList)
 
         self.show()
