@@ -14,7 +14,7 @@ QLCDNumber#recordTime{
 QPushButton#stopButton{
     background: rgba(128,128,128,0);
     border-radius: 5px;
-    border-image: url(./buttons/stop.svg);
+    border-image: url(./required/buttons/stop.svg);
 }
 QPushButton#stopButton:hover{
     background: rgba(128,128,128,0.2);

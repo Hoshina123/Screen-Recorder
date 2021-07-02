@@ -123,13 +123,14 @@ class Window(QMainWindow):
                     if record.recordMode == 0:
                         self.show()
                         break
+                self.readVideoInfo()
             recThread = threading.Thread(target=record.recordScreen,name="Recorder")
             recThread.start()
             listenThread = threading.Thread(target=recordListener,name="Record-Listener")
             listenThread.start()
         topLayout = QHBoxLayout()
         topLayout.setAlignment(Qt.AlignLeft)
-        topLayout.setSpacing(100)
+        topLayout.setSpacing(int(self.width()*0.056))
         windowLayout.addLayout(topLayout)
         recordbtn = QPushButton(content)
         recordbtn.setObjectName("recordButton")
@@ -252,14 +253,34 @@ class Window(QMainWindow):
         fullScreen.toggled.connect(checkArea)
         tickScreen.toggled.connect(checkArea)
 
-        videoList = QTableWidget(0,5)
-        videoList.setObjectName("videoList")
-        videoList.setFixedSize(int(self.width()*0.98),int(self.height()*0.55))
-        videoList.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        videoList.horizontalHeader().setObjectName("videoListHHeader")
-        videoList.verticalHeader().setObjectName("videoListVHeader")
-        videoList.setHorizontalHeaderLabels(["Name","Time","Size","Duration","State"])
-        videoList.setSelectionBehavior(QAbstractItemView.SelectRows)
-        windowLayout.addWidget(videoList)
+        self.videoList = QTableWidget(0,5)
+        self.videoList.lines = 0
+        self.videoList.setObjectName("videoList")
+        self.videoList.setFixedSize(int(self.width()*0.98),int(self.height()*0.55))
+        self.videoList.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.videoList.horizontalHeader().setObjectName("videoListHHeader")
+        self.videoList.verticalHeader().setObjectName("videoListVHeader")
+        self.videoList.setHorizontalHeaderLabels(["Name","Time","Size","Duration","FPS"])
+        self.videoList.setSelectionBehavior(QAbstractItemView.SelectRows)
+        windowLayout.addWidget(self.videoList)
 
         self.show()
+
+    #read video information
+    def readVideoInfo(self):
+        f = open("required/videoInfo.inf","a+")
+        dicts = [eval(i.replace("\n","")) for i in f.readlines()]
+        for i,d in enumerate(dicts):
+            self.videoList.lines += 1
+            self.videoList.setColumnCount(self.videoList.lines)
+            name = QTableWidgetItem(d["name"])
+            t = QTableWidgetItem(d["time"])
+            size = QTableWidgetItem(d["size"])
+            duration = QTableWidgetItem(d["duration"])
+            fps = QTableWidgetItem(d["fps"])
+            self.videoList.setItem(i,0,name)
+            self.videoList.setItem(i,1,t)
+            self.videoList.setItem(i,2,size)
+            self.videoList.setItem(i,3,duration)
+            self.videoList.setItem(i,4,fps)
+        f.close()

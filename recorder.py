@@ -27,6 +27,7 @@ class Recorder(QWidget):
         self.audioName = ""
         self.outputName = ""
         self.area = area
+        self.videoInfo = open("required/videoInfo.inf","a+")
 
     #rewrite window events
     def mousePressEvent(self,event):
@@ -56,7 +57,11 @@ class Recorder(QWidget):
         currentTime = time.localtime()
         self.outputName = "videos/{}.mp4".format(time.strftime("%Y%m%d-%H%M%S"))
         self.videoName = "videos/{}.avi".format(time.strftime("%Y%m%d-%H%M%S"))
-        video = cv2.VideoWriter(self.videoName,fourcc,cv2.CAP_PROP_FPS,
+        t = time.strftime("%Y/%m/%d %H:%M:%S")
+        FPS = cv2.CAP_PROP_FPS
+        self.videoInfo.write("{")
+        self.videoInfo.write("'name':'{}','time':'{}','fps':'{}',".format(self.videoName,t,FPS))
+        video = cv2.VideoWriter(self.videoName,fourcc,FPS,
         (self.area[2]-self.area[0],self.area[3]-self.area[1]))
         time.sleep(self.wait)
         # record
@@ -109,6 +114,7 @@ class Recorder(QWidget):
 
     # time update
     def updateTime(self):
+        result = "00:00:00"
         for i in range(self.wait):
             time.sleep(1)
             self.time.display(str(self.wait-i))
@@ -138,6 +144,7 @@ class Recorder(QWidget):
             result = "{}:{}:{}".format(timeList[0],timeList[1],timeList[2])
             self.timeString = result
             self.time.display(result)
+        self.videoInfo.write("'duration':'{}',".format(result))
     
     def merge(self):
         video = VideoFileClip("./{}".format(self.videoName))
@@ -145,8 +152,12 @@ class Recorder(QWidget):
         audioAdd = CompositeAudioClip([audio])
         videoOutput  = video.set_audio(audioAdd)
         videoOutput.write_videofile(self.outputName)
+        videoSize = round(os.path.getsize(self.outputName)/(1024**2),2)
+        self.videoInfo.write("'size':'{}MB'".format(videoSize))
         os.remove(self.videoName)
         os.remove(self.audioName)
+        self.videoInfo.write("}\n")
+        self.videoInfo.close()
 
     def showWindow(self):
         self.setFixedSize(int(self.w*0.35),int(self.h*0.05))
@@ -187,7 +198,7 @@ class Recorder(QWidget):
             background: rgba(128,128,128,0);
             border: none;
             border-radius: 5px;
-            border-image: url("./buttons/pause.svg");
+            border-image: url("./required/buttons/pause.svg");
         }
         QPushButton#pauseButton:hover{
             background: rgba(128,128,128,0.2);
@@ -200,7 +211,7 @@ class Recorder(QWidget):
             background: rgba(128,128,128,0);
             border: none;
             border-radius: 5px;
-            border-image: url("./buttons/continue.svg");
+            border-image: url(./required/buttons/continue.svg);
         }
         QPushButton#pauseButton:hover{
             background: rgba(128,128,128,0.2);
