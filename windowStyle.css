@@ -254,3 +254,19 @@ QHeaderView#videoListVHeader::section:last{
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
 }
+QTableWidgetItem{
+    background: #dcdcdc;
+    color: #000000;
+}
+QTableWidgetItem#cell-tl{
+    border-top-left-radius: 15px;
+}
+QTableWidgetItem#cell-tr{
+    border-top-right-radius: 15px;
+}
+QTableWidgetItem#cell-bl{
+    border-bottom-left-radius: 15px;
+}
+QTableWidgetItem#cell-br{
+    border-bottom-right-radius: 15px;
+}

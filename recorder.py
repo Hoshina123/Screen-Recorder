@@ -60,7 +60,8 @@ class Recorder(QWidget):
         t = time.strftime("%Y/%m/%d %H:%M:%S")
         FPS = cv2.CAP_PROP_FPS
         self.videoInfo.write("{")
-        self.videoInfo.write("'name':'{}','time':'{}','fps':'{}',".format(self.videoName,t,FPS))
+        outName = self.outputName.replace("videos/","")
+        self.videoInfo.write("'name':'{}','time':'{}','fps':'{}',".format(outName,t,FPS))
         video = cv2.VideoWriter(self.videoName,fourcc,FPS,
         (self.area[2]-self.area[0],self.area[3]-self.area[1]))
         time.sleep(self.wait)

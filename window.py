@@ -26,6 +26,7 @@ class Window(QMainWindow):
         self.setAttribute(Qt.WA_TranslucentBackground)
         self.setWindowOpacity(0.9)
         self.recArea = (0,0,self.w,self.h)
+        self.videoList = QTableWidget(0,5)
     
     #rewrite window events
     def mousePressEvent(self,event):
@@ -44,6 +45,11 @@ class Window(QMainWindow):
     def closeEvent(self,event):
         os.remove("required/buttons/desktop.png")
         event.accept()
+
+    # read video info (thread)
+    def startReadVideoInfo(self):
+        videoThread = threading.Thread(target=self.readVideoInfo)
+        videoThread.start()
 
     #show window
     def showWindow(self):
@@ -123,7 +129,7 @@ class Window(QMainWindow):
                     if record.recordMode == 0:
                         self.show()
                         break
-                self.readVideoInfo()
+                self.startReadVideoInfo()
             recThread = threading.Thread(target=record.recordScreen,name="Recorder")
             recThread.start()
             listenThread = threading.Thread(target=recordListener,name="Record-Listener")
@@ -253,8 +259,8 @@ class Window(QMainWindow):
         fullScreen.toggled.connect(checkArea)
         tickScreen.toggled.connect(checkArea)
 
-        self.videoList = QTableWidget(0,5)
         self.videoList.lines = 0
+        self.videoList.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.videoList.setObjectName("videoList")
         self.videoList.setFixedSize(int(self.width()*0.98),int(self.height()*0.55))
         self.videoList.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
@@ -263,16 +269,15 @@ class Window(QMainWindow):
         self.videoList.setHorizontalHeaderLabels(["Name","Time","Size","Duration","FPS"])
         self.videoList.setSelectionBehavior(QAbstractItemView.SelectRows)
         windowLayout.addWidget(self.videoList)
+        self.startReadVideoInfo()
 
         self.show()
-
-    #read video information
     def readVideoInfo(self):
-        f = open("required/videoInfo.inf","a+")
-        dicts = [eval(i.replace("\n","")) for i in f.readlines()]
+        f = open("required/videoInfo.inf","r")
+        dicts = [eval(i.replace("\n","").replace("videos/","")) for i in f.readlines()]
         for i,d in enumerate(dicts):
             self.videoList.lines += 1
-            self.videoList.setColumnCount(self.videoList.lines)
+            self.videoList.setRowCount(self.videoList.lines)
             name = QTableWidgetItem(d["name"])
             t = QTableWidgetItem(d["time"])
             size = QTableWidgetItem(d["size"])
