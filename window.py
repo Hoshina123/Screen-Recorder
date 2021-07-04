@@ -128,8 +128,8 @@ class Window(QMainWindow):
                 while True:
                     if record.recordMode == 0:
                         self.show()
-                        break
-                self.startReadVideoInfo()
+                        self.startReadVideoInfo()
+                        break 
             recThread = threading.Thread(target=record.recordScreen,name="Recorder")
             recThread.start()
             listenThread = threading.Thread(target=recordListener,name="Record-Listener")
@@ -260,8 +260,8 @@ class Window(QMainWindow):
         tickScreen.toggled.connect(checkArea)
 
         self.videoList.lines = 0
-        self.videoList.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.videoList.setObjectName("videoList")
+        self.videoList.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.videoList.setFixedSize(int(self.width()*0.98),int(self.height()*0.55))
         self.videoList.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.videoList.horizontalHeader().setObjectName("videoListHHeader")
@@ -273,19 +273,20 @@ class Window(QMainWindow):
 
         self.show()
     def readVideoInfo(self):
-        f = open("required/videoInfo.inf","r")
-        dicts = [eval(i.replace("\n","").replace("videos/","")) for i in f.readlines()]
-        for i,d in enumerate(dicts):
-            self.videoList.lines += 1
-            self.videoList.setRowCount(self.videoList.lines)
-            name = QTableWidgetItem(d["name"])
-            t = QTableWidgetItem(d["time"])
-            size = QTableWidgetItem(d["size"])
-            duration = QTableWidgetItem(d["duration"])
-            fps = QTableWidgetItem(d["fps"])
-            self.videoList.setItem(i,0,name)
-            self.videoList.setItem(i,1,t)
-            self.videoList.setItem(i,2,size)
-            self.videoList.setItem(i,3,duration)
-            self.videoList.setItem(i,4,fps)
-        f.close()
+        if os.path.exists("required/videoInfo.inf"):
+            f = open("required/videoInfo.inf","r")
+            dicts = [eval(i.replace("\n","").replace("videos/","")) for i in f.readlines()]
+            for i,d in enumerate(dicts):
+                self.videoList.lines += 1
+                self.videoList.setRowCount(self.videoList.lines)
+                name = QTableWidgetItem(d["name"])
+                t = QTableWidgetItem(d["time"])
+                size = QTableWidgetItem(d["size"])
+                duration = QTableWidgetItem(d["duration"])
+                fps = QTableWidgetItem(d["fps"])
+                self.videoList.setItem(i,0,name)
+                self.videoList.setItem(i,1,t)
+                self.videoList.setItem(i,2,size)
+                self.videoList.setItem(i,3,duration)
+                self.videoList.setItem(i,4,fps)
+            f.close()

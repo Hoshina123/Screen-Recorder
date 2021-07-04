@@ -18,6 +18,7 @@ class Recorder(QWidget):
     def __init__(self,area):
         super().__init__()
         self.recordMode = 1
+        self.running = 1
         self.desktop = QApplication.desktop()
         self.w = self.desktop.width()
         self.h = self.desktop.height()
@@ -108,6 +109,8 @@ class Recorder(QWidget):
         stream.close()
         wf.close()
         p.terminate()
+        
+        self.videoInfo.write("}\n")
 
         # merge video and audio
         mergeThread = threading.Thread(target=self.merge,name="recorder-merger")
@@ -157,7 +160,7 @@ class Recorder(QWidget):
         self.videoInfo.write("'size':'{}MB'".format(videoSize))
         os.remove(self.videoName)
         os.remove(self.audioName)
-        self.videoInfo.write("}\n")
+        self.running = 0
         self.videoInfo.close()
 
     def showWindow(self):
