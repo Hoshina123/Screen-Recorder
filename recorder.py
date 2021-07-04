@@ -109,8 +109,6 @@ class Recorder(QWidget):
         stream.close()
         wf.close()
         p.terminate()
-        
-        self.videoInfo.write("}\n")
 
         # merge video and audio
         mergeThread = threading.Thread(target=self.merge,name="recorder-merger")
@@ -158,6 +156,7 @@ class Recorder(QWidget):
         videoOutput.write_videofile(self.outputName)
         videoSize = round(os.path.getsize(self.outputName)/(1024**2),2)
         self.videoInfo.write("'size':'{}MB'".format(videoSize))
+        self.videoInfo.write("}\n")
         os.remove(self.videoName)
         os.remove(self.audioName)
         self.running = 0

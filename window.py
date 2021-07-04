@@ -48,7 +48,7 @@ class Window(QMainWindow):
 
     # read video info (thread)
     def startReadVideoInfo(self):
-        videoThread = threading.Thread(target=self.readVideoInfo)
+        videoThread = threading.Thread(target=self.readVideoInfo,name="video info listener")
         videoThread.start()
 
     #show window
@@ -273,8 +273,8 @@ class Window(QMainWindow):
 
         self.show()
     def readVideoInfo(self):
-        if os.path.exists("required/videoInfo.inf"):
-            f = open("required/videoInfo.inf","r")
+        f = open("required/videoInfo.inf","a+")
+        while True:
             dicts = [eval(i.replace("\n","").replace("videos/","")) for i in f.readlines()]
             for i,d in enumerate(dicts):
                 self.videoList.lines += 1
@@ -289,4 +289,4 @@ class Window(QMainWindow):
                 self.videoList.setItem(i,2,size)
                 self.videoList.setItem(i,3,duration)
                 self.videoList.setItem(i,4,fps)
-            f.close()
+        f.close()
