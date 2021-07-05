@@ -27,6 +27,9 @@ class Window(QMainWindow):
         self.setWindowOpacity(0.9)
         self.recArea = (0,0,self.w,self.h)
         self.videoList = QTableWidget(0,5)
+        self.running = True
+        videoThread = threading.Thread(target=self.readVideoInfo,name="videoInfo-Listener")
+        videoThread.start()
     
     #rewrite window events
     def mousePressEvent(self,event):
@@ -44,12 +47,8 @@ class Window(QMainWindow):
         self.setCursor(QCursor(Qt.ArrowCursor))
     def closeEvent(self,event):
         os.remove("required/buttons/desktop.png")
+        self.running = False
         event.accept()
-
-    # read video info (thread)
-    def startReadVideoInfo(self):
-        videoThread = threading.Thread(target=self.readVideoInfo,name="video info listener")
-        videoThread.start()
 
     #show window
     def showWindow(self):
@@ -128,7 +127,6 @@ class Window(QMainWindow):
                 while True:
                     if record.recordMode == 0:
                         self.show()
-                        self.startReadVideoInfo()
                         break 
             recThread = threading.Thread(target=record.recordScreen,name="Recorder")
             recThread.start()
@@ -269,12 +267,12 @@ class Window(QMainWindow):
         self.videoList.setHorizontalHeaderLabels(["Name","Time","Size","Duration","FPS"])
         self.videoList.setSelectionBehavior(QAbstractItemView.SelectRows)
         windowLayout.addWidget(self.videoList)
-        self.startReadVideoInfo()
 
         self.show()
     def readVideoInfo(self):
         f = open("required/videoInfo.inf","a+")
-        while True:
+        while self.running:
+            # update video list
             dicts = [eval(i.replace("\n","").replace("videos/","")) for i in f.readlines()]
             for i,d in enumerate(dicts):
                 self.videoList.lines += 1
