@@ -18,7 +18,7 @@ class Recorder(QWidget):
     def __init__(self,area):
         super().__init__()
         self.recordMode = 1
-        self.running = 1
+        self.isExit = False
         self.desktop = QApplication.desktop()
         self.w = self.desktop.width()
         self.h = self.desktop.height()
@@ -159,7 +159,7 @@ class Recorder(QWidget):
         self.videoInfo.write("}\n")
         os.remove(self.videoName)
         os.remove(self.audioName)
-        self.running = 0
+        self.isExit = True
         self.videoInfo.close()
 
     def showWindow(self):
