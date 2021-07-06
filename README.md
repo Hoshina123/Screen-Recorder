@@ -1,3 +1,5 @@
+![icon](https://user-images.githubusercontent.com/76691550/124558864-a1115000-de6d-11eb-84ea-b7fd3199630c.png)
+
 # Screen-Recorder
 
 Record your screen with python 3
