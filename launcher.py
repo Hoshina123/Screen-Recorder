@@ -49,7 +49,7 @@ class Launcher(QWidget):
         titleLayout.addWidget(version,0,(Qt.AlignRight|Qt.AlignBottom))
 
         # state
-        self.state = QLabel()
+        self.state = QLabel("Launching...")
         self.state.setObjectName("state")
         self.state.setFixedSize(int(self.width()*0.6),int(self.height()*0.05))
         windowLayout.addWidget(self.state)

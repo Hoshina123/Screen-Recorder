@@ -259,6 +259,7 @@ class Window(QMainWindow):
         fullScreen.toggled.connect(checkArea)
         tickScreen.toggled.connect(checkArea)
 
+        # video list
         self.videoList.setObjectName("videoList")
         self.videoList.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.videoList.setFixedSize(int(self.width()*0.98),int(self.height()*0.55))
@@ -269,9 +270,16 @@ class Window(QMainWindow):
         self.videoList.setSelectionBehavior(QAbstractItemView.SelectRows)
         windowLayout.addWidget(self.videoList)
 
+        # settings
+        settings = QToolButton(self)
+        settings.setObjectName("settings")
+        settings.setFixedSize(int(self.width()*0.05),int(self.width()*0.05))
+        settings.move(int(self.width()*0.94),int(self.height()*0.93))
+        settings.clicked.connect(print)
+
         self.show()
     def updateVideoInfo(self):
-        f = open("required/videoInfo.inf",encoding="UTF-8")
+        f = open("required/videoInfo.inf","a+",encoding="UTF-8")
         f.seek(0)
         infos = f.read().split("\n")[:-1]
         # update video list
