@@ -271,11 +271,20 @@ class Window(QMainWindow):
         windowLayout.addWidget(self.videoList)
 
         # settings
-        settings = QToolButton(self)
-        settings.setObjectName("settings")
-        settings.setFixedSize(int(self.width()*0.05),int(self.width()*0.05))
-        settings.move(int(self.width()*0.94),int(self.height()*0.93))
-        settings.clicked.connect(print)
+        # settingsPage = QWidget(self)
+        # settingsPage.setObjectName("settingsPage")
+        # settingsPage.setFixedSize(int(self.width()*0.9),int(self.height()*0.9))
+        # settingsPage.move(int(self.width()*0.05),int(self.height()*0.08))
+        # settingsPage.setVisible(False)
+
+        # settings = QToolButton(self)
+        # settings.setObjectName("settings")
+        # settings.setFixedSize(int(self.width()*0.05),int(self.width()*0.05))
+        # settings.move(int(self.width()*0.94),int(self.height()*0.93))
+        # def toggleSettingsVisible():
+        #     settingsPage.setVisible(not settingsPage.isVisible())
+        #     settings.setVisible(not settings.isVisible())
+        # settings.clicked.connect(toggleSettingsVisible)
 
         self.show()
     def updateVideoInfo(self):

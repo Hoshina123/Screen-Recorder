@@ -43,7 +43,7 @@ class Launcher(QWidget):
         titleLayout.addWidget(title)
         windowLayout.addLayout(titleLayout)
         # version
-        version = QLabel("v1.0.0")
+        version = QLabel("v2.0.0")
         version.setObjectName("version")
         version.setFixedSize(int(self.width()*0.2),int(self.height()*0.05))
         titleLayout.addWidget(version,0,(Qt.AlignRight|Qt.AlignBottom))
@@ -60,7 +60,8 @@ class Launcher(QWidget):
         txt.setFixedSize(int(self.width()*0.9),int(self.height()*0.75))
         ## read README.md
         readmeFile = open("README.md","r",encoding="UTF-8")
-        readme = readmeFile.read().replace("# ","").replace("#","")
+        readmeLines = readmeFile.readlines()[2:]
+        readme = "".join([i.replace("# ","").replace("#","") for i in readmeLines])
         txt.setText(readme)
         windowLayout.addWidget(txt)
 
