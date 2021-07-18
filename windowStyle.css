@@ -283,3 +283,24 @@ QWidget#settingsPage{
     border: none;
     border-radius: 15px;
 }
+QWidget#settingsWidget{
+    background: transparent;
+    border-radius: 15px;
+}
+QLabel#settingsTitle{
+    background: transparent;
+    font-size: 80px;
+    font-weight: bold;
+}
+QToolButton#settingsClose{
+    background: transparent;
+    border-radius: 15px;
+    border-image: url(./required/buttons/settingsClose.svg);
+}
+QToolButton#settingsClose:hover{
+    background: #ef2233;
+    border-image: url(./required/buttons/settingsClose_hover.svg);
+}
+QToolButton#settingsClose:pressed{
+    background: #df1d2c;
+}

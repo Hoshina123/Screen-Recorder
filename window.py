@@ -10,6 +10,34 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 import recorder
 
+# customize tabbar #
+class TabBar(QTabBar):
+    def tabSizeHint(self,index):
+        s = QTabBar.tabSizeHint(self,index)
+        s.transpose()
+        return s
+    def paintEvent(self,event):
+        painter = QStylePainter(self)
+        opt = QStyleOptionTab()
+
+        for i in range(self.count()):
+            self.initStyleOption(opt,i)
+            painter.drawControl(QStyle.CE_TabBarTabShape,opt)
+            painter.save()
+
+            s = opt.rect.size()
+            s.transpose()
+            r = QRect(QPoint(),s)
+            r.moveCenter(opt.rect.center())
+            opt.rect = r
+
+            c = self.tabRect(i).center()
+            painter.translate(c)
+            painter.rotate(90)
+            painter.translate(-c)
+            painter.drawControl(QStyle.CE_TabBarTabLabel,opt);
+            painter.restore()
+
 class Window(QMainWindow):
     #initialize window
     def __init__(self):
@@ -271,20 +299,45 @@ class Window(QMainWindow):
         windowLayout.addWidget(self.videoList)
 
         # settings
-        # settingsPage = QWidget(self)
-        # settingsPage.setObjectName("settingsPage")
-        # settingsPage.setFixedSize(int(self.width()*0.9),int(self.height()*0.9))
-        # settingsPage.move(int(self.width()*0.05),int(self.height()*0.08))
-        # settingsPage.setVisible(False)
+        #  settings page
+        settingsPage = QWidget(self)
+        settingsPage.setObjectName("settingsPage")
+        settingsPage.setFixedSize(int(self.width()*0.9),int(self.height()*0.9))
+        settingsPage.move(int(self.width()*0.05),int(self.height()*0.08))
+        settingsPage.setVisible(False)
 
-        # settings = QToolButton(self)
-        # settings.setObjectName("settings")
-        # settings.setFixedSize(int(self.width()*0.05),int(self.width()*0.05))
-        # settings.move(int(self.width()*0.94),int(self.height()*0.93))
-        # def toggleSettingsVisible():
-        #     settingsPage.setVisible(not settingsPage.isVisible())
-        #     settings.setVisible(not settings.isVisible())
-        # settings.clicked.connect(toggleSettingsVisible)
+        #  settings button
+        settings = QToolButton(self)
+        settings.setObjectName("settings")
+        settings.setFixedSize(int(self.width()*0.05),int(self.width()*0.05))
+        settings.move(int(self.width()*0.94),int(self.height()*0.93))
+        def showSettingsPage():
+            settingsPage.setVisible(True)
+            settings.setVisible(False)
+        settings.clicked.connect(showSettingsPage)
+
+        #   settings widget
+        settingsWidget = QWidget(settingsPage)
+        settingsWidget.setObjectName("settingsWidget")
+        settingsWidget.setFixedSize(settingsPage.width(),settingsPage.height())
+        settingsWidget.move(0,0)
+
+        #   settings page - title
+        settingsTitle = QLabel(settingsWidget,text="Settings")
+        settingsTitle.setObjectName("settingsTitle")
+        settingsTitle.setFixedSize(int(self.width()*0.3),int(self.height()*0.13))
+        settingsTitle.setAlignment(Qt.AlignCenter)
+        settingsTitle.move(0,0)
+
+        #   settings page - close button
+        def hideSettingsPage():
+            settingsPage.setVisible(False)
+            settings.setVisible(True)
+        settingsHide = QToolButton(settingsWidget)
+        settingsHide.setObjectName("settingsClose")
+        settingsHide.setFixedSize(int(self.width()*0.06),int(self.width()*0.06))
+        settingsHide.move(int(self.width()*0.8),int(self.height()*0.03))
+        settingsHide.clicked.connect(hideSettingsPage)
 
         self.show()
     def updateVideoInfo(self):
