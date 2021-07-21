@@ -304,3 +304,21 @@ QToolButton#settingsClose:hover{
 QToolButton#settingsClose:pressed{
     background: #df1d2c;
 }
+QWidget#settingsSplitline{
+    background: #cecece;
+}
+QTabWidget#settingsContent{
+    background: transparent;
+    border: none;
+    border-radius: 15px;
+}
+QTabBar#settingsContentSelector{
+    background: transparent;
+    border: none;
+}
+QTabBar#settingsContentSelector::tab{
+    background: #007aff;
+    border: none;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
