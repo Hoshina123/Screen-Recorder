@@ -24,3 +24,5 @@ You can see all the videos that you've recorded in the video list.
 All informtions about the videos will save in te file "required/videoInfo.inf"
 In the feature updates, you will be able to manage all the videos.
 
+## settings <! still making>
+You can change the settings of Screen Recorder here
