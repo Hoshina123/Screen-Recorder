@@ -317,8 +317,55 @@ QTabBar#settingsContentSelector{
     border: none;
 }
 QTabBar#settingsContentSelector::tab{
-    background: #007aff;
+    background: #ececec;
     border: none;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
+    border-radius: 10px;
+    min-height: 80px;
+    margin: 3px;
+    font-family: 'Consolas','Microsoft YaHei UI';
+    font-size: 36px;
+}
+QTabBar#settingsContentSelector::tab:first{
+    width: 240px;
+}
+QTabBar#settingsContentSelector::tab:last{
+    width: 290px;
+}
+QTabBar#settingsContentSelector::tab:hover{
+    background: #5098ff;
+}
+QTabBar#settingsContentSelector::tab:selected{
+    background: #007aff;
+}
+
+QWidget#recordSettings{
+    background: transparent;
+}
+QLabel#record-fpsLabel{
+    background: transparent;
+    font-size: 43px;
+}
+QRadioButton#record-fps{
+    background: transparent;
+    font-size: 40px;
+    font-family: 'Consolas','Microsoft YaHei UI';
+}
+QRadioButton#record-fps::indicator{
+    background: transparent;
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-style: outset;
+    border-radius: 14.5px;
+    border-color: #000000;
+    border-width: 2px;
+}
+QRadioButton#record-fps::indicator:hover{
+    background: #00aaff;
+}
+QRadioButton#record-fps::indicator:pressed{
+    background: #0066ff;
+}
+QRadioButton#record-fps::indicator:checked{
+    background: #0088ff;
 }

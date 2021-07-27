@@ -308,9 +308,42 @@ class Window(QMainWindow):
         #   settings page - tab widget
         settingsContent = QTabWidget(settingsWidget)
         settingsContent.setObjectName("settingsContent")
+        settingsContent.setIconSize(QSize(int(self.width()*0.04),int(self.width()*0.04)))
         settingsContent.tabBar().setObjectName("settingsContentSelector")
         settingsContent.setFixedSize(int(self.width()*0.9),int(self.height()*0.78))
         settingsContent.move(0,int(self.height()*0.115))
+
+        # record settings
+        recordSettings = QWidget()
+        recordSettings.setObjectName("recordSettings")
+        recordLayout = QVBoxLayout()
+        recordLayout.setAlignment(Qt.AlignTop)
+        recordSettings.setLayout(recordLayout)
+
+        #  FPS
+        fpsLayout = QHBoxLayout()
+        fpsLayout.setAlignment(Qt.AlignLeft)
+        fpsLabel = QLabel("FPS: ")
+        fpsLabel.setObjectName("record-fpsLabel")
+        fpsLabel.setFixedSize(int(self.width()*0.06),int(self.height()*0.05))
+        fpsAuto = QRadioButton("Auto")
+        fpsAuto.setObjectName("record-fps")
+        fpsAuto.setFixedSize(int(self.width()*0.08),int(self.height()*0.05))
+        fpsManual = QRadioButton("Manual")
+        fpsManual.setObjectName("record-fps")
+        fpsManual.setFixedSize(int(self.width()*0.1),int(self.height()*0.05))
+        fpsLayout.addWidget(fpsLabel)
+        fpsLayout.addWidget(fpsAuto)
+        fpsLayout.addWidget(fpsManual)
+        recordLayout.addLayout(fpsLayout)
+
+        settingsContent.addTab(recordSettings,QIcon("./required/buttons/recordSettings.svg"),
+        "Record")
+
+        appearanceSettings = QWidget()
+        recordSettings.setObjectName("appearanceSettings")
+        settingsContent.addTab(appearanceSettings,QIcon("./required/buttons/appearanceSettings.svg"),
+        "Appearance")
 
         #   settings page - close button
         def hideSettingsPage():
