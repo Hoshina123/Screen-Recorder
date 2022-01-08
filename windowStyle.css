@@ -264,6 +264,35 @@ QTableWidget::item{
 QTableWidget::item:selected{
     background: rgba(0,128,255,0.8);
 }
+QLabel#sdc{
+    background: transparent;
+    font-size: 40px;
+    color: #000000;
+}
+
+QComboBox#sdChoose::down-arrow{
+    border-image: url(./required/buttons/downArrow.png);
+}
+QComboBox#sdChoose{
+    background: #ffffff;
+    font-family: Consolas, 'Microsoft YaHei UI';
+    border-style: outset;
+    border-radius: 10px;
+    border-color:#0088ff;
+    border-width: 2px;
+    color: #000000;
+}
+QComboBox#sdChoose::drop-down{
+    border: 1px solid #0088ff;
+    border-radius: 10px;
+    width: 25px;
+}
+QComboBox#sdChoose QAbstractItemView{
+    border: 2px solid #0088ff;
+}
+QComboBox#sdChoose QAbstractItemView:clicked{
+    border: 2px solid #00aaff;
+}
 
 /* settings button */
 QToolButton#settings{
@@ -368,4 +397,14 @@ QRadioButton#record-fps::indicator:pressed{
 }
 QRadioButton#record-fps::indicator:checked{
     background: #0088ff;
+}
+QLineEdit#record-fpsinput{
+    background: transparent;
+    border: none;
+    border-style: outset;
+    border-radius: 10px;
+    border-color: #0088ff;
+    border-width: 2px;
+    font-family: 'Consolas','Microsoft YaHei UI';
+    font-size: 30px;
 }

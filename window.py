@@ -1,14 +1,18 @@
-import sys
 import os
+import sys
 import threading
 import time
+
+import sounddevice as sd
 from PIL import ImageGrab
 from PyQt5 import *
 from PyQt5.Qt import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+
 import recorder
+
 
 class Window(QMainWindow):
     #initialize window
@@ -119,7 +123,7 @@ class Window(QMainWindow):
         # record button
         def loadRecorder():
             self.hide()
-            record = recorder.Recorder(area=self.recArea)
+            record = recorder.Recorder(area=self.recArea,devID=sdChoose.currentIndex())
             record.showWindow()
             def recordListener():
                 while True:
@@ -179,30 +183,35 @@ class Window(QMainWindow):
         areaPos.setObjectName("areaPosition")
         areaPos.setFixedSize(int(self.width()*0.15),int(self.height()*0.036))
         cusLayout.addWidget(areaPos,1,0)
+
         areaX = QLineEdit()
         areaX.setObjectName("areaXPosition")
         areaX.setFixedSize(int(self.width()*0.07),int(self.height()*0.04))
         areaX.setAlignment(Qt.AlignCenter)
         areaX.setPlaceholderText("X")
         areaX.setValidator(QIntValidator())
+
         areaY = QLineEdit()
         areaY.setObjectName("areaYPosition")
         areaY.setFixedSize(int(self.width()*0.07),int(self.height()*0.04))
         areaY.setAlignment(Qt.AlignCenter)
         areaY.setPlaceholderText("Y")
         areaY.setValidator(QIntValidator())
+
         areaWidth = QLineEdit()
         areaWidth.setObjectName("areaWidth")
         areaWidth.setFixedSize(int(self.width()*0.07),int(self.height()*0.04))
         areaWidth.setAlignment(Qt.AlignCenter)
         areaWidth.setPlaceholderText("Width")
         areaWidth.setValidator(QIntValidator())
+
         areaHeight = QLineEdit()
         areaHeight.setObjectName("areaHeight")
         areaHeight.setFixedSize(int(self.width()*0.07),int(self.height()*0.04))
         areaHeight.setAlignment(Qt.AlignCenter)
         areaHeight.setPlaceholderText("Height")
         areaHeight.setValidator(QIntValidator())
+
         cusLayout.addWidget(areaX,2,0)
         cusLayout.addWidget(areaY,2,1)
         cusLayout.addWidget(areaWidth,3,0)
@@ -220,6 +229,19 @@ class Window(QMainWindow):
         previewArea.setObjectName("recordAreaPreview")
         previewArea.setFixedSize(int(self.w*0.25),int(self.h*0.25))
         previewArea.move(0,0)
+
+        # sound device choose
+        sdcLabel = QLabel(text="Sound device:")
+        sdcLabel.setObjectName("sdc")
+        sdcLabel.setFixedSize(int(self.width()*0.16),int(self.height()*0.036))
+        cusLayout.addWidget(sdcLabel,4,0)
+        
+        sdChoose = QComboBox()
+        sdChoose.setObjectName("sdChoose")
+        sdChoose.setFixedSize(int(self.width()*0.165),int(self.height()*0.036))
+        sds = ["None"]+[i["name"] for i in list(sd.query_devices())]
+        sdChoose.addItems(sds)
+        cusLayout.addWidget(sdChoose,5,0)
 
         def checkArea():
             try:
@@ -247,7 +269,7 @@ class Window(QMainWindow):
                     areaHeight.setText(str(h))
                 previewArea.setFixedSize(int(w*0.25),int(h*0.25))
                 previewArea.move(int(x*0.25),int(y*0.25))
-                self.recArea = (x,y,w,h)
+                self.recArea = (x,y,x+w,y+h)
             else:
                 previewArea.setFixedSize(int(self.w*0.25),int(self.h*0.25))
                 previewArea.move(0,0)
@@ -329,12 +351,20 @@ class Window(QMainWindow):
         fpsAuto = QRadioButton("Auto")
         fpsAuto.setObjectName("record-fps")
         fpsAuto.setFixedSize(int(self.width()*0.08),int(self.height()*0.05))
+        fpsAuto.setChecked(True)
         fpsManual = QRadioButton("Manual")
         fpsManual.setObjectName("record-fps")
         fpsManual.setFixedSize(int(self.width()*0.1),int(self.height()*0.05))
+        fpsInput = QLineEdit()
+        fpsInput.setObjectName("record-fpsinput")
+        fpsInput.setValidator(QIntValidator())
+        fpsInput.setPlaceholderText("1~120")
+        fpsInput.setAlignment(Qt.AlignCenter)
+        fpsInput.setFixedSize(int(self.width()*0.06),int(self.height()*0.04))
         fpsLayout.addWidget(fpsLabel)
         fpsLayout.addWidget(fpsAuto)
         fpsLayout.addWidget(fpsManual)
+        fpsLayout.addWidget(fpsInput)
         recordLayout.addLayout(fpsLayout)
 
         settingsContent.addTab(recordSettings,QIcon("./required/buttons/recordSettings.svg"),

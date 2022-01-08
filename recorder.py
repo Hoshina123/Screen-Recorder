@@ -15,7 +15,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 class Recorder(QWidget):
-    def __init__(self,area):
+    def __init__(self,area, devID=0):
         super().__init__()
         self.recordMode = 1
         self.isExit = False
@@ -28,6 +28,7 @@ class Recorder(QWidget):
         self.audioName = ""
         self.outputName = ""
         self.area = area
+        self.devID = devID
         self.videoInfo = open("required/videoInfo.inf","a+")
 
     #rewrite window events
@@ -52,12 +53,13 @@ class Recorder(QWidget):
         w,h = desktop.size
         audioThread = threading.Thread(target=self.recordAudio,name="recorder-sound")
         timeThread = threading.Thread(target=self.updateTime,name="recorder-screen")
-        audioThread.start()
+        if self.devID != 0:
+            audioThread.start()
         timeThread.start()
         fourcc = cv2.VideoWriter_fourcc(*"XVID")
-        currentTime = time.localtime()
-        self.outputName = "videos/{}.mp4".format(time.strftime("%Y%m%d-%H%M%S"))
-        self.videoName = "videos/{}.avi".format(time.strftime("%Y%m%d-%H%M%S"))
+        self.currentTime = time.localtime()
+        self.outputName = "videos/{}.mp4".format(time.strftime("%Y%m%d-%H%M%S",self.currentTime))
+        self.videoName = "videos/{}.avi".format(time.strftime("%Y%m%d-%H%M%S",self.currentTime))
         t = time.strftime("%Y/%m/%d %H:%M:%S")
         FPS = cv2.CAP_PROP_FPS
         self.videoInfo.write("{")
@@ -83,13 +85,11 @@ class Recorder(QWidget):
         fmt = pyaudio.paInt16
         channels = 2
         rate = 44100
-        frames = []
 
-        time.sleep(self.wait)
         p = pyaudio.PyAudio()
-        speakers = p.get_default_output_device_info()["hostApi"]
+        sd.default.device[0] = self.devID
         stream = p.open(channels=channels,format=fmt,rate=rate,input=True,
-        frames_per_buffer=chunk,input_host_api_specific_stream_info=speakers)
+        frames_per_buffer=chunk)
         currentTime = time.localtime()
         self.audioName = "videos/snd{}.wav".format(time.strftime("%Y%m%d-%H%M%S"))
         wf = wave.open(self.audioName,"wb")
@@ -97,15 +97,16 @@ class Recorder(QWidget):
         wf.setsampwidth(p.get_sample_size(fmt))
         wf.setframerate(rate)
 
+        time.sleep(self.wait)
+
         while True:
             if self.recordMode == 0:
                 break
             elif self.recordMode == 2:
                 continue
             data = stream.read(chunk)
-            frames.append(data)
+            wf.writeframes(data)
         stream.stop_stream()
-        wf.writeframes(b"".join(frames))
         stream.close()
         wf.close()
         p.terminate()
@@ -150,12 +151,12 @@ class Recorder(QWidget):
     
     def merge(self):
         video = VideoFileClip("./{}".format(self.videoName))
-        audio = AudioFileClip("./{}".format(self.audioName)).volumex(2)
+        audio = AudioFileClip("./{}".format(self.audioName)).volumex(1)
         audioAdd = CompositeAudioClip([audio])
-        videoOutput  = video.set_audio(audioAdd)
-        videoOutput.write_videofile(self.outputName)
-        videoSize = round(os.path.getsize(self.outputName)/(1024**2),2)
-        self.videoInfo.write("'size':'{}MB'".format(videoSize))
+        video.set_audio(audioAdd)
+        video.write_videofile(self.outputName)
+        videoSize = round(os.path.getsize(self.outputName)/1024,2)
+        self.videoInfo.write("'size':'{}KB'".format(videoSize))
         self.videoInfo.write("}\n")
         os.remove(self.videoName)
         os.remove(self.audioName)
