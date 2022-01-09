@@ -236,11 +236,17 @@ class Window(QMainWindow):
         sdcLabel.setFixedSize(int(self.width()*0.16),int(self.height()*0.036))
         cusLayout.addWidget(sdcLabel,4,0)
         
+        #  tooltip
+        def sdToolTip():
+            sdChoose.setToolTip("Device: {}".format(sdChoose.currentText()))
+
         sdChoose = QComboBox()
         sdChoose.setObjectName("sdChoose")
         sdChoose.setFixedSize(int(self.width()*0.165),int(self.height()*0.036))
+        sdChoose.setView(QListView())
         sds = ["None"]+[i["name"] for i in list(sd.query_devices())]
         sdChoose.addItems(sds)
+        sdChoose.currentIndexChanged.connect(sdToolTip)
         cusLayout.addWidget(sdChoose,5,0)
 
         def checkArea():

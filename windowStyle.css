@@ -287,11 +287,14 @@ QComboBox#sdChoose::drop-down{
     border-radius: 10px;
     width: 25px;
 }
-QComboBox#sdChoose QAbstractItemView{
-    border: 2px solid #0088ff;
+QComboBox#sdChoose QAbstractItemView::item{
+    width: 80px;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #000000;
 }
-QComboBox#sdChoose QAbstractItemView:clicked{
-    border: 2px solid #00aaff;
+QComboBox#sdChoose QAbstractItemView::item:hover{
+    background: #cecece;
 }
 
 /* settings button */
