@@ -5,6 +5,7 @@
 QWidget#icon{
 	background: transparent;
 	border-image: url(./required/icon.png);
+	border-radius: 10px;
 }
 QLabel#title{
 	font-family: Consolas,'Microsoft YaHei UI';

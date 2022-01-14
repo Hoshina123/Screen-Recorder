@@ -29,7 +29,6 @@ class Recorder(QWidget):
         self.outputName = ""
         self.area = area
         self.devID = devID
-        self.videoInfo = open("required/videoInfo.inf","a+")
 
     #rewrite window events
     def mousePressEvent(self,event):
@@ -62,9 +61,9 @@ class Recorder(QWidget):
         self.videoName = "videos/{}.avi".format(time.strftime("%Y%m%d-%H%M%S",self.currentTime))
         t = time.strftime("%Y/%m/%d %H:%M:%S")
         FPS = cv2.CAP_PROP_FPS
-        self.videoInfo.write("{")
+        
         outName = self.outputName.replace("videos/","")
-        self.videoInfo.write("'name':'{}','time':'{}','fps':'{}',".format(outName,t,FPS))
+        
         video = cv2.VideoWriter(self.videoName,fourcc,FPS,
         (self.area[2]-self.area[0],self.area[3]-self.area[1]))
         time.sleep(self.wait)
@@ -79,6 +78,8 @@ class Recorder(QWidget):
             video.write(writeImg)
         video.release()
         self.close()
+        self.isExit = True
+        
     # sound record
     def recordAudio(self):
         chunk = 1024
@@ -147,7 +148,7 @@ class Recorder(QWidget):
             result = "{}:{}:{}".format(timeList[0],timeList[1],timeList[2])
             self.timeString = result
             self.time.display(result)
-        self.videoInfo.write("'duration':'{}',".format(result))
+        
     
     def merge(self):
         video = VideoFileClip("./{}".format(self.videoName))
@@ -155,13 +156,11 @@ class Recorder(QWidget):
         audioAdd = CompositeAudioClip([audio])
         video.set_audio(audioAdd)
         video.write_videofile(self.outputName)
-        videoSize = round(os.path.getsize(self.outputName)/1024,2)
-        self.videoInfo.write("'size':'{}KB'".format(videoSize))
-        self.videoInfo.write("}\n")
+        
         os.remove(self.videoName)
         os.remove(self.audioName)
         self.isExit = True
-        self.videoInfo.close()
+        
 
     def showWindow(self):
         self.setFixedSize(int(self.w*0.35),int(self.h*0.05))

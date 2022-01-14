@@ -13,10 +13,12 @@ class Launcher(QWidget):
         desktop = QApplication.desktop()
         self.w = desktop.width()
         self.h = desktop.height()
+
         self.setWindowTitle("Screen Recorder")
         self.setFixedSize(int(self.w*0.5),int(self.h*0.5))
         self.setWindowFlags(Qt.FramelessWindowHint)
         self.move(int(self.w*0.25),int(self.h*0.25))
+
         self.launch()
 
     def launch(self):

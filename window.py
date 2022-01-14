@@ -3,6 +3,7 @@ import sys
 import threading
 import time
 
+import cv2
 import sounddevice as sd
 from PIL import ImageGrab
 from PyQt5 import *
@@ -13,6 +14,52 @@ from PyQt5.QtWidgets import *
 
 import recorder
 
+# options widget
+class optWidget(QWidget):
+    def __init__(self, index:int, name:str, winWidth=1200, winHeight=800):
+        super().__init__()
+
+        self.vIndex = index
+        self.name = name
+        self.w = winWidth
+        self.h = winHeight
+        self.deleted = False
+
+        optionsLayout = QHBoxLayout()
+        optionsLayout.setAlignment(Qt.AlignCenter)
+        optionsLayout.setSpacing(15)
+
+        playButton = QPushButton("Play")
+        deleteButton = QPushButton("Delete")
+        playButton.setObjectName("vOptButton")
+        deleteButton.setObjectName("vOptButton")
+        playButton.setFixedSize(int(self.w*0.07),int(self.h*0.03))
+        deleteButton.setFixedSize(int(self.w*0.07),int(self.h*0.03))
+        playButton.clicked.connect(self.play)
+        deleteButton.clicked.connect(self.delete)
+        self.setLayout(optionsLayout)
+
+        optionsLayout.addWidget(playButton)
+        optionsLayout.addWidget(deleteButton)
+
+
+    # play video #
+    def play(self):
+        os.system("videos/"+self.name)
+
+    # delete #
+    def delete(self):
+        rep = QMessageBox.question(self, "Confirm delete ?", "Are you sure to delete {} ?".format(self.name),
+            QMessageBox.Yes|QMessageBox.No, QMessageBox.No)
+        if rep == QMessageBox.Yes:
+            try:
+                os.remove("./videos/"+self.name)
+                self.deleted = True
+            except:
+                QMessageBox.critical(self, "Error", "File not found: {}".format(self.name),
+                    QMessageBox.Ok)
+            
+
 
 class Window(QMainWindow):
     #initialize window
@@ -22,6 +69,8 @@ class Window(QMainWindow):
         self.desktop = QApplication.desktop()
         self.w = self.desktop.width()
         self.h = self.desktop.height()
+        self.isAlive = True
+        
         #set window
         self.setFixedSize(int(self.w*0.6),int(self.h*0.7))
         self.setWindowTitle("Screen recorder")
@@ -29,9 +78,12 @@ class Window(QMainWindow):
         self.setWindowFlags(Qt.FramelessWindowHint)
         self.setAttribute(Qt.WA_TranslucentBackground)
         self.setWindowOpacity(0.9)
+
         self.recArea = (0,0,self.w,self.h)
         self.videoList = QTableWidget(0,5)
         self.videoList.lines = 0
+        self.optWidgets = []
+        self.videoOptions = QWidget()
         self.updateVideoInfo()
     
     #rewrite window events
@@ -50,6 +102,7 @@ class Window(QMainWindow):
         self.setCursor(QCursor(Qt.ArrowCursor))
     def closeEvent(self,event):
         os.remove("required/buttons/desktop.png")
+        self.isAlive = False
         event.accept()
 
     #show window
@@ -287,6 +340,7 @@ class Window(QMainWindow):
         fullScreen.toggled.connect(checkArea)
         tickScreen.toggled.connect(checkArea)
 
+
         # video list
         self.videoList.setObjectName("videoList")
         self.videoList.setEditTriggers(QAbstractItemView.NoEditTriggers)
@@ -294,7 +348,7 @@ class Window(QMainWindow):
         self.videoList.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.videoList.horizontalHeader().setObjectName("videoListHHeader")
         self.videoList.verticalHeader().setObjectName("videoListVHeader")
-        self.videoList.setHorizontalHeaderLabels(["Name","Time","Size","Duration","FPS"])
+        self.videoList.setHorizontalHeaderLabels(["Name","Time","Size","Duration","Options"])
         self.videoList.setSelectionBehavior(QAbstractItemView.SelectRows)
         windowLayout.addWidget(self.videoList)
 
@@ -304,6 +358,8 @@ class Window(QMainWindow):
         settingsPage.setObjectName("settingsPage")
         settingsPage.setFixedSize(int(self.width()*0.9),int(self.height()*0.9))
         settingsPage.move(int(self.width()*0.05),int(self.height()*0.08))
+        settingsPage.setGeometry(QRect(int(self.width()*0.05),int(self.height()*0.08),
+            int(self.width()*0.05),int(self.width()*0.05)))
         settingsPage.setVisible(False)
 
         #  settings button
@@ -311,14 +367,25 @@ class Window(QMainWindow):
         settings.setObjectName("settings")
         settings.setFixedSize(int(self.width()*0.05),int(self.width()*0.05))
         settings.move(int(self.width()*0.94),int(self.height()*0.93))
+
         def showSettingsPage():
             settingsPage.setVisible(True)
             settings.setVisible(False)
+
+            settingsAnimation = QPropertyAnimation(settingsPage, b"geometry")
+            settingsAnimation.setDuration(3000)
+            settingsAnimation.setStartValue(QRect(int(self.width()*0.05),int(self.height()*0.08),
+            int(self.width()*0.05),int(self.width()*0.05)))
+            settingsAnimation.setEndValue(QRect(int(self.width()*0.05),int(self.height()*0.08),
+            int(self.width()*0.9),int(self.height()*0.9)))
+            settingsAnimation.start()
+
         settings.clicked.connect(showSettingsPage)
 
         #   settings widget
         settingsWidget = QWidget(settingsPage)
         settingsWidget.setObjectName("settingsWidget")
+        settingsWidget.setAutoFillBackground(True)
         settingsWidget.setFixedSize(settingsPage.width(),settingsPage.height())
         settingsWidget.move(0,0)
 
@@ -392,23 +459,34 @@ class Window(QMainWindow):
         settingsHide.clicked.connect(hideSettingsPage)
 
         self.show()
+
+        # video info listener #
+        def vInfoListen():
+            while self.isAlive:
+                for i in range(len(self.optWidgets)):
+                    if self.optWidgets[i].deleted:
+                        self.videoList.removeRow(i)
+        infoListener = threading.Thread(target=vInfoListen,name="VideoInfoListener")
+        infoListener.start()
+
+    # update video info #
     def updateVideoInfo(self):
-        f = open("required/videoInfo.inf","a+",encoding="UTF-8")
-        f.seek(0)
-        infos = f.read().split("\n")[:-1]
-        # update video list
-        dicts = [eval(i) for i in infos]
-        for i in range(len(dicts)):
+        fileNames =[f[2][0] for f in list(os.walk("./videos"))]
+        for i in range(len(fileNames)):
+            vCap = cv2.VideoCapture("./videos/"+fileNames[i])
+            if (fileNames[i]=="TEMP") or (fileNames[i].split('.')[-1].lower() not in ["mp4","avi","mov","mpeg","m4v","mkv","flv"]) or (vCap.get(5)==0): continue
+            
             self.videoList.lines += 1
             self.videoList.setRowCount(self.videoList.lines)
-            name = QTableWidgetItem(dicts[i]["name"])
-            t = QTableWidgetItem(dicts[i]["time"])
-            size = QTableWidgetItem(dicts[i]["size"])
-            duration = QTableWidgetItem(dicts[i]["duration"])
-            fps = QTableWidgetItem(dicts[i]["fps"])
+
+            name = QTableWidgetItem(fileNames[i])
+            t = QTableWidgetItem(str(time.strftime("%Y/%m/%d %H:%M:%S",time.localtime(os.path.getctime("./videos/"+fileNames[i])))))
+            size = QTableWidgetItem("{} KB".format(round(os.path.getsize("./videos/"+fileNames[i])/1024,2)))
+            duration = QTableWidgetItem("{} Sec".format(vCap.get(7)/vCap.get(5)))
+
             self.videoList.setItem(i,0,name)
             self.videoList.setItem(i,1,t)
             self.videoList.setItem(i,2,size)
             self.videoList.setItem(i,3,duration)
-            self.videoList.setItem(i,4,fps)
-        f.close()
+            self.optWidgets.append(optWidget(i, fileNames[i], self.width(), self.height()))
+            self.videoList.setCellWidget(i,4,self.optWidgets[-1])

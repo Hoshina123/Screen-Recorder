@@ -269,6 +269,18 @@ QLabel#sdc{
     font-size: 40px;
     color: #000000;
 }
+QPushButton#vOptButton{
+    background: #fefeff;
+    border: 2px solid #0088ff;
+    border-radius: 15px;
+    font-size: 25px;
+}
+QPushButton#vOptButton:hover{
+    background: #efefef;
+}
+QPushButton#vOptButton::pressed{
+    background: #e0e0e0;
+}
 
 QComboBox#sdChoose::down-arrow{
     border-image: url(./required/buttons/downArrow.png);
