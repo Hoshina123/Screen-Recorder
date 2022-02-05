@@ -29,27 +29,17 @@ class optWidget(QWidget):
         optionsLayout.setAlignment(Qt.AlignCenter)
         optionsLayout.setSpacing(15)
 
-        playButton = QPushButton("Play")
         deleteButton = QPushButton("Delete")
-        playButton.setObjectName("vOptButton")
         deleteButton.setObjectName("vOptButton")
-        playButton.setFixedSize(int(self.w*0.07),int(self.h*0.03))
         deleteButton.setFixedSize(int(self.w*0.07),int(self.h*0.03))
-        playButton.clicked.connect(self.play)
         deleteButton.clicked.connect(self.delete)
         self.setLayout(optionsLayout)
 
-        optionsLayout.addWidget(playButton)
         optionsLayout.addWidget(deleteButton)
-
-
-    # play video #
-    def play(self):
-        os.system("videos/"+self.name)
 
     # delete #
     def delete(self):
-        rep = QMessageBox.question(self, "Confirm delete ?", "Are you sure to delete {} ?".format(self.name),
+        rep = QMessageBox.question(self, "Confirm delete?", "Are you sure to delete {}?".format(self.name),
             QMessageBox.Yes|QMessageBox.No, QMessageBox.No)
         if rep == QMessageBox.Yes:
             try:

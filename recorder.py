@@ -78,7 +78,8 @@ class Recorder(QWidget):
             video.write(writeImg)
         video.release()
         self.close()
-        self.isExit = True
+        if self.devID == 0:
+            self.isExit = True
         
     # sound record
     def recordAudio(self):
@@ -163,7 +164,7 @@ class Recorder(QWidget):
         
 
     def showWindow(self):
-        self.setFixedSize(int(self.w*0.35),int(self.h*0.05))
+        self.setFixedSize(int(self.w*0.17),int(self.h*0.05))
         self.setWindowTitle("Screen Recorder")
         self.setWindowFlags(Qt.FramelessWindowHint|Qt.WindowStaysOnTopHint)
         self.setAttribute(Qt.WA_TranslucentBackground)
@@ -174,6 +175,7 @@ class Recorder(QWidget):
         styleSheet = open("recorderStyle.css","r")
         style = styleSheet.read()
         self.setStyleSheet(style)
+        styleSheet.close()
 
         #main widget
         content = QWidget(self)
