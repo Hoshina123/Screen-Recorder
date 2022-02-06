@@ -309,6 +309,19 @@ QComboBox#sdChoose QAbstractItemView::item:hover{
     background: #cecece;
 }
 
+/* refresh button */
+QToolButton#refresh{
+    background: rgba(177,177,177,0);
+    border-radius: 15px;
+    border-image: url(./required/buttons/refresh.svg);
+}
+QToolButton#refresh:hover{
+    background: rgba(177,177,177,0.5);
+}
+QToolButton#refresh:pressed{
+    background: rgba(177,177,177,0.7);
+}
+
 /* settings button */
 QToolButton#settings{
     background: rgba(177,177,177,0);

@@ -13,6 +13,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 import recorder
+import sizeFormatter as sf
 
 # options widget
 class optWidget(QWidget):
@@ -93,7 +94,9 @@ class Window(QMainWindow):
     def closeEvent(self,event):
         os.remove("required/buttons/desktop.png")
         self.isAlive = False
+        inst = QApplication.instance()
         event.accept()
+        inst.quit()
 
     #show window
     def showWindow(self):
@@ -342,6 +345,14 @@ class Window(QMainWindow):
         self.videoList.setSelectionBehavior(QAbstractItemView.SelectRows)
         windowLayout.addWidget(self.videoList)
 
+        # refresh button
+        refresh = QToolButton(self)
+        refresh.setObjectName("refresh")
+        refresh.setToolTip("Refresh")
+        refresh.setFixedSize(int(self.width()*0.05),int(self.width()*0.05))
+        refresh.move(int(self.width()*0.89),int(self.height()*0.93))
+        refresh.clicked.connect(self.updateVideoInfo)
+
         # settings
         #  settings page
         settingsPage = QWidget(self)
@@ -351,6 +362,7 @@ class Window(QMainWindow):
         settingsPage.setGeometry(QRect(int(self.width()*0.05),int(self.height()*0.08),
             int(self.width()*0.05),int(self.width()*0.05)))
         settingsPage.setVisible(False)
+
 
         #  settings button
         settings = QToolButton(self)
@@ -464,14 +476,14 @@ class Window(QMainWindow):
         fileNames =[f[2][0] for f in list(os.walk("./videos"))]
         for i in range(len(fileNames)):
             vCap = cv2.VideoCapture("./videos/"+fileNames[i])
-            if (fileNames[i]=="TEMP") or (fileNames[i].split('.')[-1].lower() not in ["mp4","avi","mov","mpeg","m4v","mkv","flv"]) or (vCap.get(5)==0): continue
-            
-            self.videoList.lines += 1
-            self.videoList.setRowCount(self.videoList.lines)
+            if (fileNames[i]=="TEMP") or (fileNames[i].split('.')[-1].lower() not in ["mp4","avi","mov","mpeg","m4v","mkv","flv"]) or (vCap.get(5)==0):
+                fileNames.pop(i)
+        self.videoList.setRowCount(len(fileNames))
 
+        for i in range(len(fileNames)):
             name = QTableWidgetItem(fileNames[i])
             t = QTableWidgetItem(str(time.strftime("%Y/%m/%d %H:%M:%S",time.localtime(os.path.getctime("./videos/"+fileNames[i])))))
-            size = QTableWidgetItem("{} KB".format(round(os.path.getsize("./videos/"+fileNames[i])/1024,2)))
+            size = QTableWidgetItem(sf.formatTopLevel("./videos/"+fileNames[i]))
             duration = QTableWidgetItem("{} Sec".format(vCap.get(7)/vCap.get(5)))
 
             self.videoList.setItem(i,0,name)
