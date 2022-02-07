@@ -33,14 +33,18 @@ class Recorder(QWidget):
 
     #rewrite window events
     def mousePressEvent(self,event):
-        if event.button()==Qt.LeftButton and not self.isFold:
+        if event.button()==Qt.LeftButton:
             self.m_flag=True
             self.m_Position=event.globalPos()-self.pos()
+            self.m_Ypos = event.globalY()-self.y()
             event.accept()
             self.setCursor(QCursor(Qt.SizeAllCursor)) 
     def mouseMoveEvent(self,QMouseEvent):
-        if Qt.LeftButton and not self.isFold:
-            self.move(QMouseEvent.globalPos()-self.m_Position)
+        if Qt.LeftButton:
+            if self.isFold:
+                self.move(self.x(), QMouseEvent.globalY()-self.m_Ypos)
+            else:
+                self.move(QMouseEvent.globalPos()-self.m_Position)
             QMouseEvent.accept()
     def mouseReleaseEvent(self,QMouseEvent):
         self.m_flag=False
@@ -214,7 +218,7 @@ class Recorder(QWidget):
                 self.isFold = False
                 self.fold.setStyleSheet(self.unfoldStyle)
                 self.fold.setToolTip("Fold")
-                self.move(self.w-self.width()-50,self.h-self.height()-100)
+                self.move(self.w-self.width()-50,self.y())
             else:
                 self.isFold = True
                 self.fold.setStyleSheet(self.foldStyle)
@@ -285,7 +289,7 @@ class Recorder(QWidget):
         self.show()
 
 ## test code ##
-# app = QApplication(sys.argv)
-# test = Recorder((0,0,800,600))
-# test.showWindow()
-# sys.exit(app.exec_())
+app = QApplication(sys.argv)
+test = Recorder((0,0,800,600))
+test.showWindow()
+sys.exit(app.exec_())
