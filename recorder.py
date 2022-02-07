@@ -24,6 +24,7 @@ class Recorder(QWidget):
         self.h = self.desktop.height()
         self.timeString = "00:00:00"
         self.wait = 3
+        self.isFold = False
         self.videoName = ""
         self.audioName = ""
         self.outputName = ""
@@ -32,13 +33,13 @@ class Recorder(QWidget):
 
     #rewrite window events
     def mousePressEvent(self,event):
-        if event.button()==Qt.LeftButton:
+        if event.button()==Qt.LeftButton and not self.isFold:
             self.m_flag=True
             self.m_Position=event.globalPos()-self.pos()
             event.accept()
             self.setCursor(QCursor(Qt.SizeAllCursor)) 
     def mouseMoveEvent(self,QMouseEvent):
-        if Qt.LeftButton:  
+        if Qt.LeftButton and not self.isFold:
             self.move(QMouseEvent.globalPos()-self.m_Position)
             QMouseEvent.accept()
     def mouseReleaseEvent(self,QMouseEvent):
@@ -92,7 +93,6 @@ class Recorder(QWidget):
         sd.default.device[0] = self.devID
         stream = p.open(channels=channels,format=fmt,rate=rate,input=True,
         frames_per_buffer=chunk)
-        currentTime = time.localtime()
         self.audioName = "videos/snd{}.wav".format(time.strftime("%Y%m%d-%H%M%S"))
         wf = wave.open(self.audioName,"wb")
         wf.setnchannels(channels)
@@ -187,6 +187,41 @@ class Recorder(QWidget):
         recorderLayout.setGeometry(QRect(0,0,self.width(),self.height()-50))
         recorderLayout.setAlignment(Qt.AlignLeft|Qt.AlignTop)
 
+        # fold / unfold
+        self.fold = QToolButton()
+        self.fold.setFixedSize(int(self.w*0.01),int(self.h*0.03))
+        self.fold.setToolTip("Fold")
+        recorderLayout.addWidget(self.fold,0,(Qt.AlignLeft|Qt.AlignTop))
+        self.foldStyle = '''
+        QToolButton{
+            background: transparent;
+            border-image: url(./required/buttons/unfold.png);
+        }
+        QToolButton:hover{
+            background: rgba(128, 128, 128, 0.2);
+        }'''
+        self.unfoldStyle = '''
+        QToolButton{
+            background: transparent;
+            border-image: url(./required/buttons/fold.svg);
+        }
+        QToolButton:hover{
+            background: rgba(128, 128, 128, 0.2);
+        }'''
+        self.fold.setStyleSheet(self.unfoldStyle)
+        def toggleFold():
+            if self.isFold:
+                self.isFold = False
+                self.fold.setStyleSheet(self.unfoldStyle)
+                self.fold.setToolTip("Fold")
+                self.move(self.w-self.width()-50,self.h-self.height()-100)
+            else:
+                self.isFold = True
+                self.fold.setStyleSheet(self.foldStyle)
+                self.fold.setToolTip("Unfold")
+                self.move(int(self.w*0.98),self.y()) 
+        self.fold.clicked.connect(toggleFold)
+
         # time show
         self.time = QLCDNumber()
         self.time.setObjectName("recordTime")
@@ -251,6 +286,6 @@ class Recorder(QWidget):
 
 ## test code ##
 # app = QApplication(sys.argv)
-# test = Recorder()
+# test = Recorder((0,0,800,600))
 # test.showWindow()
 # sys.exit(app.exec_())

@@ -5,8 +5,8 @@ def formatTopLevel(fname:str) -> str:
     Format the file size to the max level.
      fname => size(unformatted) (B)
 
-    Example: formatTopLevel(1024) -> "1KB";
-                formatTopLevel(1048576) -> "1MB"
+    Example: formatTopLevel(1024[file size]) -> "1 KB";
+                formatTopLevel(1048576[file size]) -> "1 MB"
     '''
 
     size = os.path.getsize(fname)
