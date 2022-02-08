@@ -289,7 +289,7 @@ class Recorder(QWidget):
         self.show()
 
 ## test code ##
-app = QApplication(sys.argv)
-test = Recorder((0,0,800,600))
-test.showWindow()
-sys.exit(app.exec_())
+# app = QApplication(sys.argv)
+# test = Recorder((0,0,800,600))
+# test.showWindow()
+# sys.exit(app.exec_())
