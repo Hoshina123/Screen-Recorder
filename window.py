@@ -1,3 +1,4 @@
+from fileinput import filename
 import os
 import sys
 import threading
@@ -101,7 +102,7 @@ class Window(QMainWindow):
     #show window
     def showWindow(self):
         videoEncodes = [("MP4V","mpeg4",".mp4"),("XVID","png",".avi"),("PIM1","png",".avi"),
-        ("I420","png",".avi"),("THEO","libvorbis",".ogv")]
+        ("I420","png",".avi")]
 
         #read style sheet
         style = open("windowStyle.css","r",encoding="UTF-8")
@@ -354,7 +355,7 @@ class Window(QMainWindow):
         refresh.setObjectName("refresh")
         refresh.setToolTip("Refresh")
         refresh.setFixedSize(int(self.width()*0.05),int(self.width()*0.05))
-        #refresh.move(int(self.width()*0.89),int(self.height()*0.93))
+        # refresh.move(int(self.width()*0.89),int(self.height()*0.93))
         refresh.move(int(self.width()*0.94),int(self.height()*0.93))
         refresh.clicked.connect(self.updateVideoInfo)
 
@@ -372,9 +373,9 @@ class Window(QMainWindow):
         #  settings button
         settings = QToolButton(self)
         settings.setVisible(False)
-        # settings.setObjectName("settings")
-        # settings.setFixedSize(int(self.width()*0.05),int(self.width()*0.05))
-        # settings.move(int(self.width()*0.94),int(self.height()*0.93))
+        settings.setObjectName("settings")
+        settings.setFixedSize(int(self.width()*0.05),int(self.width()*0.05))
+        settings.move(int(self.width()*0.94),int(self.height()*0.93))
 
         def showSettingsPage():
             settingsPage.setVisible(True)
@@ -459,8 +460,7 @@ class Window(QMainWindow):
         fourccSect.setObjectName("record-choose")
         fourccSect.setFixedSize(int(self.width()*0.15),int(self.height()*0.036))
         fourccSect.setView(QListView())
-        fourccSect.addItems(["MPEG4 (mp4)","MPEG4 (avi)","MPEG1 (avi)","YUV (avi)",
-        "Ogg Vorbis(ogv)"])
+        fourccSect.addItems(["MPEG4 (mp4)","MPEG4 (avi)","MPEG1 (avi)","YUV (avi)"])
         fourccLayout.addWidget(fourccLabel)
         fourccLayout.addWidget(fourccSect)
         settingsLayout.addLayout(fourccLayout)
@@ -496,18 +496,26 @@ class Window(QMainWindow):
 
     # update video info #
     def updateVideoInfo(self):
-        fileNames =[f[2][0] for f in list(os.walk("./videos"))]
+        fileNames = list(os.walk("./videos"))[0][2]
+        delIndexs = []
         for i in range(len(fileNames)):
             vCap = cv2.VideoCapture("./videos/"+fileNames[i])
+            #print(vCap.get(5))
             if (fileNames[i]=="TEMP") or (fileNames[i].split('.')[-1].lower() not in ["mp4","avi","mov","mpeg","m4v","mkv","flv"]) or (vCap.get(5)==0):
-                fileNames.pop(i)
+                delIndexs.append(i)
+        
+        for i in delIndexs:
+            fileNames.pop(i)
         self.videoList.setRowCount(len(fileNames))
 
         for i in range(len(fileNames)):
             name = QTableWidgetItem(fileNames[i])
             t = QTableWidgetItem(str(time.strftime("%Y/%m/%d %H:%M:%S",time.localtime(os.path.getctime("./videos/"+fileNames[i])))))
             size = QTableWidgetItem(sf.formatTopLevel("./videos/"+fileNames[i]))
-            duration = QTableWidgetItem("{} Sec".format(vCap.get(7)/vCap.get(5)))
+            if vCap.get(5) == 0:
+                duration = QTableWidgetItem("<1 Sec")
+            else:
+                duration = QTableWidgetItem("{} Sec".format(vCap.get(7)/vCap.get(5)))
 
             self.videoList.setItem(i,0,name)
             self.videoList.setItem(i,1,t)

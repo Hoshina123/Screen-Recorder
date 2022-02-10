@@ -75,9 +75,12 @@ class Recorder(QWidget):
         self.currentTime = time.localtime()
         self.outputName = "videos/{}{}".format(time.strftime("%Y%m%d-%H%M%S",self.currentTime),
         self.fileExt)
-        self.videoName = "videos/v-{}{}".format(time.strftime("%Y%m%d-%H%M%S",self.currentTime),
-        self.fileExt)
-        t = time.strftime("%Y/%m/%d %H:%M:%S")
+        if self.devID == 0:
+            self.videoName = "videos/{}{}".format(time.strftime("%Y%m%d-%H%M%S",self.currentTime),
+            self.fileExt)
+        else:
+            self.videoName = "videos/v-{}{}".format(time.strftime("%Y%m%d-%H%M%S",self.currentTime),
+            self.fileExt)
         FPS = cv2.CAP_PROP_FPS
         
         video = cv2.VideoWriter(self.videoName,fourcc,FPS,
