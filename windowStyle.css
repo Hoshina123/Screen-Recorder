@@ -282,10 +282,10 @@ QPushButton#vOptButton::pressed{
     background: #e0e0e0;
 }
 
-QComboBox#sdChoose::down-arrow{
+QComboBox#record-choose::down-arrow{
     border-image: url(./required/buttons/downArrow.png);
 }
-QComboBox#sdChoose{
+QComboBox#record-choose{
     background: #ffffff;
     font-family: Consolas, 'Microsoft YaHei UI';
     border-style: outset;
@@ -294,18 +294,18 @@ QComboBox#sdChoose{
     border-width: 2px;
     color: #000000;
 }
-QComboBox#sdChoose::drop-down{
+QComboBox#record-choose::drop-down{
     border: 1px solid #0088ff;
     border-radius: 10px;
     width: 25px;
 }
-QComboBox#sdChoose QAbstractItemView::item{
+QComboBox#record-choose QAbstractItemView::item{
     width: 80px;
     border-radius: 12px;
     background: #ffffff;
     color: #000000;
 }
-QComboBox#sdChoose QAbstractItemView::item:hover{
+QComboBox#record-choose QAbstractItemView::item:hover{
     background: #cecece;
 }
 
@@ -398,16 +398,16 @@ QTabBar#settingsContentSelector::tab:selected{
 QWidget#recordSettings{
     background: transparent;
 }
-QLabel#record-fpsLabel{
+QLabel#record-label{
     background: transparent;
     font-size: 43px;
 }
-QRadioButton#record-fps{
+QRadioButton#record-sect{
     background: transparent;
     font-size: 40px;
     font-family: 'Consolas','Microsoft YaHei UI';
 }
-QRadioButton#record-fps::indicator{
+QRadioButton#record-sect::indicator{
     background: transparent;
     width: 30px;
     height: 30px;
@@ -417,16 +417,16 @@ QRadioButton#record-fps::indicator{
     border-color: #000000;
     border-width: 2px;
 }
-QRadioButton#record-fps::indicator:hover{
+QRadioButton#record-sect::indicator:hover{
     background: #00aaff;
 }
-QRadioButton#record-fps::indicator:pressed{
+QRadioButton#record-sect::indicator:pressed{
     background: #0066ff;
 }
-QRadioButton#record-fps::indicator:checked{
+QRadioButton#record-sect::indicator:checked{
     background: #0088ff;
 }
-QLineEdit#record-fpsinput{
+QLineEdit#record-input{
     background: transparent;
     border: none;
     border-style: outset;

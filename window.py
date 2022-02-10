@@ -100,6 +100,9 @@ class Window(QMainWindow):
 
     #show window
     def showWindow(self):
+        videoEncodes = [("MP4V","mpeg4",".mp4"),("XVID","png",".avi"),("PIM1","png",".avi"),
+        ("I420","png",".avi"),("THEO","libvorbis",".ogv")]
+
         #read style sheet
         style = open("windowStyle.css","r",encoding="UTF-8")
         self.setStyleSheet(style.read())
@@ -169,7 +172,8 @@ class Window(QMainWindow):
         # record button
         def loadRecorder():
             self.hide()
-            record = recorder.Recorder(area=self.recArea,devID=sdChoose.currentIndex())
+            record = recorder.Recorder(area=self.recArea,devID=sdChoose.currentIndex(),
+            encode = videoEncodes[fourccSect.currentIndex()])
             record.showWindow()
             def recordListener():
                 while True:
@@ -287,7 +291,7 @@ class Window(QMainWindow):
             sdChoose.setToolTip("Device: {}".format(sdChoose.currentText()))
 
         sdChoose = QComboBox()
-        sdChoose.setObjectName("sdChoose")
+        sdChoose.setObjectName("record-choose")
         sdChoose.setFixedSize(int(self.width()*0.165),int(self.height()*0.036))
         sdChoose.setView(QListView())
         sds = ["None"]+[i["name"] for i in list(sd.query_devices())]
@@ -350,7 +354,8 @@ class Window(QMainWindow):
         refresh.setObjectName("refresh")
         refresh.setToolTip("Refresh")
         refresh.setFixedSize(int(self.width()*0.05),int(self.width()*0.05))
-        refresh.move(int(self.width()*0.89),int(self.height()*0.93))
+        #refresh.move(int(self.width()*0.89),int(self.height()*0.93))
+        refresh.move(int(self.width()*0.94),int(self.height()*0.93))
         refresh.clicked.connect(self.updateVideoInfo)
 
         # settings
@@ -366,9 +371,10 @@ class Window(QMainWindow):
 
         #  settings button
         settings = QToolButton(self)
-        settings.setObjectName("settings")
-        settings.setFixedSize(int(self.width()*0.05),int(self.width()*0.05))
-        settings.move(int(self.width()*0.94),int(self.height()*0.93))
+        settings.setVisible(False)
+        # settings.setObjectName("settings")
+        # settings.setFixedSize(int(self.width()*0.05),int(self.width()*0.05))
+        # settings.move(int(self.width()*0.94),int(self.height()*0.93))
 
         def showSettingsPage():
             settingsPage.setVisible(True)
@@ -382,7 +388,7 @@ class Window(QMainWindow):
             int(self.width()*0.9),int(self.height()*0.9)))
             settingsAnimation.start()
 
-        settings.clicked.connect(showSettingsPage)
+        #settings.clicked.connect(showSettingsPage)
 
         #   settings widget
         settingsWidget = QWidget(settingsPage)
@@ -413,25 +419,26 @@ class Window(QMainWindow):
         # record settings
         recordSettings = QWidget()
         recordSettings.setObjectName("recordSettings")
-        recordLayout = QVBoxLayout()
-        recordLayout.setAlignment(Qt.AlignTop)
-        recordSettings.setLayout(recordLayout)
+        settingsLayout = QVBoxLayout()
+        settingsLayout.setAlignment(Qt.AlignTop)
+        recordSettings.setLayout(settingsLayout)
 
         #  FPS
         fpsLayout = QHBoxLayout()
         fpsLayout.setAlignment(Qt.AlignLeft)
+
         fpsLabel = QLabel("FPS: ")
-        fpsLabel.setObjectName("record-fpsLabel")
+        fpsLabel.setObjectName("record-label")
         fpsLabel.setFixedSize(int(self.width()*0.06),int(self.height()*0.05))
         fpsAuto = QRadioButton("Auto")
-        fpsAuto.setObjectName("record-fps")
+        fpsAuto.setObjectName("record-sect")
         fpsAuto.setFixedSize(int(self.width()*0.08),int(self.height()*0.05))
         fpsAuto.setChecked(True)
         fpsManual = QRadioButton("Manual")
-        fpsManual.setObjectName("record-fps")
+        fpsManual.setObjectName("record-sect")
         fpsManual.setFixedSize(int(self.width()*0.1),int(self.height()*0.05))
         fpsInput = QLineEdit()
-        fpsInput.setObjectName("record-fpsinput")
+        fpsInput.setObjectName("record-input")
         fpsInput.setValidator(QIntValidator())
         fpsInput.setPlaceholderText("1~120")
         fpsInput.setAlignment(Qt.AlignCenter)
@@ -440,7 +447,23 @@ class Window(QMainWindow):
         fpsLayout.addWidget(fpsAuto)
         fpsLayout.addWidget(fpsManual)
         fpsLayout.addWidget(fpsInput)
-        recordLayout.addLayout(fpsLayout)
+        settingsLayout.addLayout(fpsLayout)
+
+        # encode select
+        fourccLayout = QHBoxLayout()
+        fourccLayout.setAlignment(Qt.AlignLeft)
+        fourccLabel = QLabel("Encode: ")
+        fourccLabel.setObjectName("record-label")
+        fourccLabel.setFixedSize(int(self.width()*0.1),int(self.height()*0.05))
+        fourccSect = QComboBox()
+        fourccSect.setObjectName("record-choose")
+        fourccSect.setFixedSize(int(self.width()*0.15),int(self.height()*0.036))
+        fourccSect.setView(QListView())
+        fourccSect.addItems(["MPEG4 (mp4)","MPEG4 (avi)","MPEG1 (avi)","YUV (avi)",
+        "Ogg Vorbis(ogv)"])
+        fourccLayout.addWidget(fourccLabel)
+        fourccLayout.addWidget(fourccSect)
+        settingsLayout.addLayout(fourccLayout)
 
         settingsContent.addTab(recordSettings,QIcon("./required/buttons/recordSettings.svg"),
         "Record")

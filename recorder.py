@@ -15,7 +15,15 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
 class Recorder(QWidget):
-    def __init__(self,area, devID=0):
+    '''
+    # Recorder
+    ## Module 'Recorder' in Screen-Recorder
+    
+     area: the record area (x, y, width, height)
+     encode: video encoder (fourcc, ffmpeg encode(when devID != 0), filename extension)
+     devID: sound device index (none when devID=0)
+    '''
+    def __init__(self,area:tuple, encode:tuple, devID=0):
         super().__init__()
         self.recordMode = 1
         self.isExit = False
@@ -30,6 +38,9 @@ class Recorder(QWidget):
         self.outputName = ""
         self.area = area
         self.devID = devID
+        self.fourcc = encode[0]
+        self.fcodec = encode[1]
+        self.fileExt = encode[2]
 
     #rewrite window events
     def mousePressEvent(self,event):
@@ -60,14 +71,14 @@ class Recorder(QWidget):
         if self.devID != 0:
             audioThread.start()
         timeThread.start()
-        fourcc = cv2.VideoWriter_fourcc(*"XVID")
+        fourcc = cv2.VideoWriter_fourcc(*self.fourcc)
         self.currentTime = time.localtime()
-        self.outputName = "videos/{}.mp4".format(time.strftime("%Y%m%d-%H%M%S",self.currentTime))
-        self.videoName = "videos/{}.avi".format(time.strftime("%Y%m%d-%H%M%S",self.currentTime))
+        self.outputName = "videos/{}{}".format(time.strftime("%Y%m%d-%H%M%S",self.currentTime),
+        self.fileExt)
+        self.videoName = "videos/v-{}{}".format(time.strftime("%Y%m%d-%H%M%S",self.currentTime),
+        self.fileExt)
         t = time.strftime("%Y/%m/%d %H:%M:%S")
         FPS = cv2.CAP_PROP_FPS
-        
-        outName = self.outputName.replace("videos/","")
         
         video = cv2.VideoWriter(self.videoName,fourcc,FPS,
         (self.area[2]-self.area[0],self.area[3]-self.area[1]))
@@ -160,7 +171,7 @@ class Recorder(QWidget):
         audio = AudioFileClip("./{}".format(self.audioName)).volumex(1)
         audioAdd = CompositeAudioClip([audio])
         video.set_audio(audioAdd)
-        video.write_videofile(self.outputName)
+        video.write_videofile(self.outputName,codec=self.fcodec)
         
         os.remove(self.videoName)
         os.remove(self.audioName)

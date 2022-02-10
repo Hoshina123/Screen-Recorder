@@ -45,7 +45,7 @@ class Launcher(QWidget):
         titleLayout.addWidget(title)
         windowLayout.addLayout(titleLayout)
         # version
-        version = QLabel("Preview")
+        version = QLabel("v2.1.0")
         version.setObjectName("version")
         version.setFixedSize(int(self.width()*0.2),int(self.height()*0.05))
         titleLayout.addWidget(version,0,(Qt.AlignRight|Qt.AlignBottom))
