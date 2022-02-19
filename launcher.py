@@ -1,6 +1,5 @@
 import sys
-import time
-import threading
+import os
 from PyQt5 import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -15,9 +14,12 @@ class Launcher(QWidget):
         self.h = desktop.height()
 
         self.setWindowTitle("Screen Recorder")
-        self.setFixedSize(int(self.w*0.5),int(self.h*0.5))
+        self.setFixedSize(int(self.w*0.4),int(self.h*0.2))
         self.setWindowFlags(Qt.FramelessWindowHint)
-        self.move(int(self.w*0.25),int(self.h*0.25))
+        self.move(int(self.w*0.3),int(self.h*0.4))
+
+        if not os.path.exists("./videos"):
+            os.mkdir("videos")
 
         self.launch()
 
@@ -60,11 +62,7 @@ class Launcher(QWidget):
         txt = QLabel()
         txt.setObjectName("text")
         txt.setFixedSize(int(self.width()*0.9),int(self.height()*0.75))
-        ## read README.md
-        readmeFile = open("README.md","r",encoding="UTF-8")
-        readmeLines = readmeFile.readlines()[2:]
-        readme = "".join([i.replace("# ","").replace("#","") for i in readmeLines])
-        txt.setText(readme)
+        txt.setText('''©2021 Administator-user''')
         windowLayout.addWidget(txt)
 
         self.show()

@@ -181,10 +181,10 @@ class Window(QMainWindow):
                     if record.recordMode == 0:
                         self.show()
                         break
-                while True:
-                    if record.isExit:
-                        self.updateVideoInfo()
-                        break
+                while not record.isExit:
+                    pass
+                time.sleep(0.1)
+                self.updateVideoInfo(addOpt=False)
             recThread = threading.Thread(target=record.recordScreen,name="Recorder")
             recThread.start()
             listenThread = threading.Thread(target=recordListener,name="Record-Listener")
@@ -357,7 +357,9 @@ class Window(QMainWindow):
         refresh.setFixedSize(int(self.width()*0.05),int(self.width()*0.05))
         # refresh.move(int(self.width()*0.89),int(self.height()*0.93))
         refresh.move(int(self.width()*0.94),int(self.height()*0.93))
-        refresh.clicked.connect(self.updateVideoInfo)
+        def updateVInfoWithoutKWargs():
+            self.updateVideoInfo(addOpt=True)
+        refresh.clicked.connect(updateVInfoWithoutKWargs)
 
         # settings
         #  settings page
@@ -495,7 +497,9 @@ class Window(QMainWindow):
         infoListener.start()
 
     # update video info #
-    def updateVideoInfo(self):
+    def updateVideoInfo(self, addOpt=True):
+        if list(os.walk("./videos")) == []:
+            return 0
         fileNames = list(os.walk("./videos"))[0][2]
         delIndexs = []
         for i in range(len(fileNames)):
@@ -521,5 +525,6 @@ class Window(QMainWindow):
             self.videoList.setItem(i,1,t)
             self.videoList.setItem(i,2,size)
             self.videoList.setItem(i,3,duration)
-            self.optWidgets.append(optWidget(i, fileNames[i], self.width(), self.height()))
-            self.videoList.setCellWidget(i,4,self.optWidgets[-1])
+            if addOpt:
+                self.optWidgets.append(optWidget(i, fileNames[i], self.width(), self.height()))
+                self.videoList.setCellWidget(i,4,self.optWidgets[-1])

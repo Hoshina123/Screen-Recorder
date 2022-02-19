@@ -99,6 +99,7 @@ class Recorder(QWidget):
         self.close()
         if self.devID == 0:
             self.isExit = True
+            return 0
         
     # sound record
     def recordAudio(self):
@@ -134,6 +135,7 @@ class Recorder(QWidget):
         # merge video and audio
         mergeThread = threading.Thread(target=self.merge,name="recorder-merger")
         mergeThread.start()
+        return 0
 
     # time update
     def updateTime(self):
@@ -178,7 +180,9 @@ class Recorder(QWidget):
         
         os.remove(self.videoName)
         os.remove(self.audioName)
+        time.sleep(0.1)
         self.isExit = True
+        self.close()
         
 
     def showWindow(self):
